@@ -15,7 +15,7 @@ public class SenderInfoResponse {
 	@Schema(description = "Contact information URL", example = "https://sundsvall.se/")
 	private String contactInformationUrl;
 
-	@Schema(description = "Contact information phone number", example = "4660191000")
+	@Schema(description = "Contact information phone number", example = "060-19 10 00")
 	private String contactInformationPhoneNumber;
 
 	@Schema(description = "Contact information e-mail address", example = "sundsvalls.kommun@sundsvall.se")
