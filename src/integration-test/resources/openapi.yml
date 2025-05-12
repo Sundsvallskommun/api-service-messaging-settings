@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:60050
+  - url: http://localhost:8080
     description: Generated server url
 paths:
   /{municipalityId}/{departmentId}/sender-info:
@@ -39,28 +39,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SenderInfoResponse"
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/SenderInfoResponse"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolation"
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolation"
         "404":
           description: Not Found
           content:
-            application/json:
+            application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
@@ -109,61 +104,173 @@ components:
           format: int32
         reasonPhrase:
           type: string
-    ConstraintDescriptorObject:
+    ConstraintViolationProblem:
       type: object
       properties:
-        annotation:
-          type: object
-        attributes:
+        cause:
+          $ref: "#/components/schemas/ThrowableProblem"
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        type:
+          type: string
+          format: uri
+        status:
+          $ref: "#/components/schemas/StatusType"
+        violations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Violation"
+        title:
+          type: string
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        parameters:
           type: object
           additionalProperties:
             type: object
-        messageTemplate:
+        detail:
           type: string
-        valueUnwrapping:
-          type: string
-          enum:
-            - DEFAULT
-            - UNWRAP
-            - SKIP
-        validationAppliesTo:
-          type: string
-          enum:
-            - IMPLICIT
-            - RETURN_VALUE
-            - PARAMETERS
-        reportAsSingleViolation:
-          type: boolean
-        composingConstraints:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/ConstraintDescriptorObject"
-    ConstraintViolation:
-      type: object
-      properties:
-        message:
-          type: string
-        messageTemplate:
-          type: string
-        constraintDescriptor:
-          $ref: "#/components/schemas/ConstraintDescriptorObject"
-        rootBean:
-          type: object
-        propertyPath:
-          $ref: "#/components/schemas/Path"
-        leafBean:
-          type: object
-        invalidValue:
-          type: object
-        executableParameters:
+        suppressed:
           type: array
           items:
             type: object
-        executableReturnValue:
-          type: object
-    Path:
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    ThrowableProblem:
       type: object
+      properties:
+        cause:
+          $ref: "#/components/schemas/ThrowableProblem"
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
+        detail:
+          type: string
+        title:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    Violation:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
     SenderInfoResponse:
       type: object
       properties:
@@ -178,7 +285,7 @@ components:
         contactInformationPhoneNumber:
           type: string
           description: Contact information phone number
-          example: "4660191000"
+          example: 060-19 10 00
         contactInformationEmail:
           type: string
           description: Contact information e-mail address
