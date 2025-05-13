@@ -8,7 +8,7 @@ _A service used for fetching configurations for messaging._
 
 - **Java 21 or higher**
 - **Maven**
-- **MariaDB**(if applicable)
+- **MariaDB**
 - **Git**
 - **[Dependent Microservices](#dependencies)**
 
