@@ -24,7 +24,7 @@ import se.sundsvall.messagingsettings.test.annotation.UnitTest;
 
 @UnitTest
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
-public class MessagingSettingsResourceTest {
+class MessagingSettingsResourceTest {
 
 	@MockitoBean
 	private MessagingSettingsService mockMessagingSettingsService;
@@ -44,7 +44,7 @@ public class MessagingSettingsResourceTest {
 			.withSmsSender("sender name")
 			.build();
 
-		when(mockMessagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(eq(municipalityId), eq(departmentId)))
+		when(mockMessagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId))
 			.thenReturn(senderInfoResponse);
 
 		webTestClient.get()
@@ -63,7 +63,7 @@ public class MessagingSettingsResourceTest {
 		final var municipalityId = "2281";
 		final var departmentId = "dep";
 
-		when(mockMessagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(eq(municipalityId), eq(departmentId)))
+		when(mockMessagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId))
 			.thenThrow(Problem.valueOf(NOT_FOUND));
 
 		webTestClient.get()

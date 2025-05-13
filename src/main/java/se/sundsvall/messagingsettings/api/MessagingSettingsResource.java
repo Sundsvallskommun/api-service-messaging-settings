@@ -36,13 +36,13 @@ import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 	content = @Content(
 		mediaType = APPLICATION_PROBLEM_JSON_VALUE,
 		schema = @Schema(implementation = Problem.class)))
-public class MessagingSettingsResource {
+class MessagingSettingsResource {
 
-	public static final String GET_SENDER_INFO_PATH = "/{municipalityId}/{departmentId}/sender-info";
+	static final String GET_SENDER_INFO_PATH = "/{municipalityId}/{departmentId}/sender-info";
 
 	private final MessagingSettingsService messagingSettingsService;
 
-	public MessagingSettingsResource(MessagingSettingsService messagingSettingsService) {
+	MessagingSettingsResource(MessagingSettingsService messagingSettingsService) {
 		this.messagingSettingsService = messagingSettingsService;
 	}
 
@@ -51,7 +51,7 @@ public class MessagingSettingsResource {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
 	})
-	public ResponseEntity<SenderInfoResponse> getSenderInfo(
+	ResponseEntity<SenderInfoResponse> getSenderInfo(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId,
 		@Parameter(name = "departmentId", description = "Department ID", example = "SKM") @PathVariable(name = "departmentId") final String departmentId) {
 		return ok(messagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId));

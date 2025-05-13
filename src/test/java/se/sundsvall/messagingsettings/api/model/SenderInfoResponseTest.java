@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import se.sundsvall.messagingsettings.test.annotation.UnitTest;
 
 @UnitTest
-public class SenderInfoResponseTest {
+class SenderInfoResponseTest {
 
 	@Test
-	public void builderAndGetters() {
+	void builderAndGetters() {
 		final var supportText = "text";
 		final var contactInformationUrl = "url";
 		final var contactInformationPhoneNumber = "phone number";

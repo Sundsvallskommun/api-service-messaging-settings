@@ -11,13 +11,13 @@ import se.sundsvall.messagingsettings.test.annotation.UnitTest;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
-public class MessagingSettingsServiceTest {
+class MessagingSettingsServiceTest {
 
 	@InjectMocks
 	private MessagingSettingsService messagingSettingsService;
 
 	@Test
-	public void getSenderInfoThrowsNotFoundProblem() {
+	void getSenderInfoThrowsNotFoundProblem() {
 		final var municipalityId = "2281";
 		final var departmentId = "SKM";
 
