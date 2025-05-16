@@ -1,0 +1,11 @@
+{
+	"type": "https://zalando.github.io/problem/constraint-violation",
+	"status": 400,
+	"title": "Constraint Violation",
+	"violations": [
+		{
+			"field": "getSenderInfo.municipalityId",
+			"message": "not a valid municipality ID"
+		}
+	]
+}
