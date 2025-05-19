@@ -11,3 +11,5 @@ openapi:
 spring:
   application:
     name: api-service-messaging-settings
+  flyway:
+    enabled: false
