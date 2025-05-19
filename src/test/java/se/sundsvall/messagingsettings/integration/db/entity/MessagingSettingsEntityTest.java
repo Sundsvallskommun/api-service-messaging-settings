@@ -8,7 +8,7 @@ import se.sundsvall.messagingsettings.integration.db.entity.enums.SnailMailMetho
 import se.sundsvall.messagingsettings.test.annotation.UnitTest;
 
 @UnitTest
-public class MessagingSettingsEntityTest {
+class MessagingSettingsEntityTest {
 
 	@Test
 	void builderAndGetters() {
