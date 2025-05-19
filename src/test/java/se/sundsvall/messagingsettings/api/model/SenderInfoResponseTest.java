@@ -31,4 +31,11 @@ class SenderInfoResponseTest {
 		assertThat(senderInfo.getContactInformationEmail()).isEqualTo(contactInformationEmail);
 		assertThat(senderInfo.getSmsSender()).isEqualTo(smsSender);
 	}
+
+	@Test
+	void builderAndGetters_noValues() {
+		final var entity = SenderInfoResponse.builder().build();
+
+		assertThat(entity).hasAllNullFieldsOrProperties();
+	}
 }

@@ -21,10 +21,26 @@ class EntityMapperTest {
 			.build();
 		final var senderInfo = EntityMapper.toSenderInfo(entity);
 
+		assertThat(senderInfo).hasNoNullFieldsOrProperties();
 		assertThat(senderInfo.getSupportText()).isEqualTo(entity.getSupportText());
 		assertThat(senderInfo.getContactInformationUrl()).isEqualTo(entity.getContactInformationUrl());
 		assertThat(senderInfo.getContactInformationPhoneNumber()).isEqualTo(entity.getContactInformationPhoneNumber());
 		assertThat(senderInfo.getContactInformationEmail()).isEqualTo(entity.getContactInformationEmail());
 		assertThat(senderInfo.getSmsSender()).isEqualTo(entity.getSmsSender());
+	}
+
+	@Test
+	void toSenderInfo_withNull() {
+		final var senderInfo = EntityMapper.toSenderInfo(null);
+
+		assertThat(senderInfo).isNull();
+	}
+
+	@Test
+	void toSenderInfo_withNullValues() {
+		final var entity = MessagingSettingsEntity.builder().build();
+		final var senderInfo = EntityMapper.toSenderInfo(entity);
+
+		assertThat(senderInfo).hasAllNullFieldsOrProperties();
 	}
 }

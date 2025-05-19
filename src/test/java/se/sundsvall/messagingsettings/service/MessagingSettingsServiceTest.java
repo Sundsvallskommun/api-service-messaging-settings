@@ -2,7 +2,6 @@ package se.sundsvall.messagingsettings.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -42,7 +41,7 @@ class MessagingSettingsServiceTest {
 		assertThat(messagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
 			.isInstanceOf(SenderInfoResponse.class);
 
-		verify(mockMessagingSettingsRepository, times(1)).findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID);
+		verify(mockMessagingSettingsRepository).findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID);
 		verifyNoMoreInteractions(mockMessagingSettingsRepository);
 	}
 

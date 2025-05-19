@@ -24,7 +24,7 @@ class MessagingSettingsRepositoryTest {
 
 	@Test
 	void findByMunicipalityIdAndDepartmentId() {
-		final var id = 15L;
+		final var id = "475dcfd4-21d5-4f1d-9aac-fbf247f889b7";
 		final var municipalityId = "2281";
 		final var departmentId = "SKM";
 

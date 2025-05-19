@@ -33,9 +33,9 @@ import se.sundsvall.messagingsettings.integration.db.entity.enums.SnailMailMetho
 public class MessagingSettingsEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	@Column(name = "id", length = 36)
+	private String id;
 
 	@Column(name = "municipality_id")
 	private String municipalityId;

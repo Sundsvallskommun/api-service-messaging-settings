@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import se.sundsvall.messagingsettings.integration.db.entity.MessagingSettingsEntity;
 
 @Repository
-public interface MessagingSettingsRepository extends JpaRepository<MessagingSettingsEntity, Long> {
+public interface MessagingSettingsRepository extends JpaRepository<MessagingSettingsEntity, String> {
 
 	Optional<MessagingSettingsEntity> findByMunicipalityIdAndDepartmentId(String municipalityId, String departmentId);
 }

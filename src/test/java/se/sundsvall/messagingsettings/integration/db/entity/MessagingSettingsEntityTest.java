@@ -12,7 +12,7 @@ public class MessagingSettingsEntityTest {
 
 	@Test
 	void builderAndGetters() {
-		final var id = 1L;
+		final var id = "475dcfd4-21d5-4f1d-9aac-fbf247f889b7";
 		final var municipalityId = "2281";
 		final var departmentId = "SKM";
 		final var departmentName = "dept";
@@ -42,6 +42,7 @@ public class MessagingSettingsEntityTest {
 			.withUpdated(updated)
 			.build();
 
+		assertThat(entity).hasNoNullFieldsOrProperties();
 		assertThat(entity.getId()).isEqualTo(id);
 		assertThat(entity.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(entity.getDepartmentId()).isEqualTo(departmentId);
@@ -55,5 +56,12 @@ public class MessagingSettingsEntityTest {
 		assertThat(entity.getSmsSender()).isEqualTo(smsSender);
 		assertThat(entity.getCreated()).isEqualTo(created);
 		assertThat(entity.getUpdated()).isEqualTo(updated);
+	}
+
+	@Test
+	void builderAndGetters_noValues() {
+		final var entity = MessagingSettingsEntity.builder().build();
+
+		assertThat(entity).hasAllNullFieldsOrProperties();
 	}
 }

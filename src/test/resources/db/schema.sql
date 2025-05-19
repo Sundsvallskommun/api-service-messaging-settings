@@ -1,8 +1,8 @@
 
     create table messaging_settings (
         created datetime(6),
-        id bigint not null auto_increment,
         updated datetime(6),
+        id varchar(36) not null,
         callback_email varchar(255),
         contact_information_email varchar(255),
         contact_information_phone_number varchar(255),
