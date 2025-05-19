@@ -2,6 +2,7 @@ package se.sundsvall.messagingsettings.integration.db.mapper;
 
 import static java.util.Optional.ofNullable;
 
+import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
 import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
 import se.sundsvall.messagingsettings.integration.db.entity.MessagingSettingsEntity;
 
@@ -17,6 +18,14 @@ public class EntityMapper {
 				.withContactInformationPhoneNumber(e.getContactInformationPhoneNumber())
 				.withContactInformationEmail(e.getContactInformationEmail())
 				.withSmsSender(e.getSmsSender())
+				.build())
+			.orElse(null);
+	}
+
+	public static CallbackEmailResponse toCallbackEmail(MessagingSettingsEntity entity) {
+		return ofNullable(entity)
+			.map(e -> CallbackEmailResponse.builder()
+				.withCallbackEmail(e.getCallbackEmail())
 				.build())
 			.orElse(null);
 	}

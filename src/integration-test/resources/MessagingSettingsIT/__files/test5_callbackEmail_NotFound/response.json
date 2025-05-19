@@ -1,0 +1,5 @@
+{
+	"title": "Not Found",
+	"status": 404,
+	"detail": "Callback e-mail not found for municipality with ID '2281' and department with ID 'NON_EXISTING_DEPARTMENT_ID'."
+}
