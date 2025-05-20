@@ -43,4 +43,31 @@ class EntityMapperTest {
 
 		assertThat(senderInfo).hasAllNullFieldsOrProperties();
 	}
+
+	@Test
+	void toCallbackEmail() {
+		final var email = "test@domain.tld";
+		final var messagingSettingsEntity = MessagingSettingsEntity.builder()
+			.withCallbackEmail(email)
+			.build();
+		final var result = EntityMapper.toCallbackEmail(messagingSettingsEntity);
+
+		assertThat(result).hasNoNullFieldsOrProperties();
+		assertThat(result.getCallbackEmail()).isEqualTo(email);
+	}
+
+	@Test
+	void toCallbackEmail_withNull() {
+		final var callbackEmail = EntityMapper.toCallbackEmail(null);
+
+		assertThat(callbackEmail).isNull();
+	}
+
+	@Test
+	void toCallbackEmail_withNullValues() {
+		final var messagingSettingsEntity = MessagingSettingsEntity.builder().build();
+		final var callbackEmail = EntityMapper.toCallbackEmail(messagingSettingsEntity);
+
+		assertThat(callbackEmail).hasAllNullFieldsOrProperties();
+	}
 }

@@ -59,6 +59,55 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  /{municipalityId}/{departmentId}/callback-email:
+    get:
+      tags:
+        - Messaging Settings
+      summary: Get sender info
+      description: Get callback e-mail for given department and municipality.
+      operationId: getCallbackEmail
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: departmentId
+          in: path
+          description: Department ID
+          required: true
+          schema:
+            type: string
+          example: SKM
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallbackEmailResponse"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /api-docs:
     get:
       tags:
@@ -295,4 +344,12 @@ components:
           description: Name of SMS sender
           example: Sundsvall
       description: SenderInfo response
+    CallbackEmailResponse:
+      type: object
+      properties:
+        callbackEmail:
+          type: string
+          description: Callback e-mail address
+          example: no-reply@domain.tld
+      description: CallbackEmail response
   securitySchemes: {}

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
+import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
 import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
 import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 
@@ -39,6 +40,7 @@ import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 class MessagingSettingsResource {
 
 	static final String GET_SENDER_INFO_PATH = "/{municipalityId}/{departmentId}/sender-info";
+	static final String GET_CALLBACK_EMAIL_PATH = "/{municipalityId}/{departmentId}/callback-email";
 
 	private final MessagingSettingsService messagingSettingsService;
 
@@ -55,5 +57,16 @@ class MessagingSettingsResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId,
 		@Parameter(name = "departmentId", description = "Department ID", example = "SKM") @PathVariable(name = "departmentId") final String departmentId) {
 		return ok(messagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId));
+	}
+
+	@GetMapping(path = GET_CALLBACK_EMAIL_PATH, produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get sender info", description = "Get callback e-mail for given department and municipality.", responses = {
+		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+	})
+	ResponseEntity<CallbackEmailResponse> getCallbackEmail(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId,
+		@Parameter(name = "departmentId", description = "Department ID", example = "SKM") @PathVariable(name = "departmentId") final String departmentId) {
+		return ok(messagingSettingsService.getCallbackEmailByMunicipalityIdAndDepartmentId(municipalityId, departmentId));
 	}
 }
