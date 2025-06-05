@@ -60,7 +60,7 @@ class MessagingSettingsResource {
 	}
 
 	@GetMapping(path = GET_CALLBACK_EMAIL_PATH, produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get sender info", description = "Get callback e-mail for given department and municipality.", responses = {
+	@Operation(summary = "Get callback email", description = "Get callback e-mail for given department and municipality.", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
 	})

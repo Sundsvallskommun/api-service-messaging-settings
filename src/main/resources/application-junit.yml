@@ -27,3 +27,17 @@ spring:
             script:
               append: 'false'
         format_sql: 'true'
+  security:
+    oauth2:
+      client:
+        provider:
+          employee:
+            token-uri: junit-token-url
+        registration:
+          employee:
+            client-id: junit-client-id
+            client-secret: junit-client-secret
+integration:
+  employee:
+    url: junit-employe-url
+  
