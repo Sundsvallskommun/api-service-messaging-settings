@@ -13,3 +13,16 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  security:
+    oauth2:
+      client:
+        provider:
+          employee:
+            token-uri: http://localhost:${wiremock.server.port}/api-gateway/token
+        registration:
+          employee:
+            client-id: client-id
+            client-secret: client-secret
+integration:
+  employee:
+    url: http://localhost:${wiremock.server.port}/api-employee

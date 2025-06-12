@@ -13,3 +13,14 @@ spring:
     name: api-service-messaging-settings
   flyway:
     enabled: false
+  security:
+    oauth2:
+      client:
+        registration:
+          employee:
+            authorization-grant-type: client_credentials
+            provider: employee
+integration:
+  employee:
+    connect-timeout: 2
+    read-timeout: 10

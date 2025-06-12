@@ -63,7 +63,7 @@ paths:
     get:
       tags:
         - Messaging Settings
-      summary: Get sender info
+      summary: Get callback email
       description: Get callback e-mail for given department and municipality.
       operationId: getCallbackEmail
       parameters:

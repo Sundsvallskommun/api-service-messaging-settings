@@ -7,13 +7,13 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.messagingsettings.Application;
-import se.sundsvall.messagingsettings.test.annotation.IntegrationTest;
 
-@IntegrationTest
+@ActiveProfiles("it")
 @WireMockAppTestSuite(files = "classpath:/MessagingSettingsIT/", classes = Application.class)
 @Sql({
 	"/db/scripts/truncate.sql",

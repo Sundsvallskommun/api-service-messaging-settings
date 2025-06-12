@@ -11,10 +11,10 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import se.sundsvall.messagingsettings.test.annotation.UnitTest;
+import org.springframework.test.context.ActiveProfiles;
 
-@UnitTest
 @SpringBootTest
+@ActiveProfiles("junit")
 class SchemaVerificationTest {
 
 	private static final String STORED_SCHEMA_FILE = "db/schema.sql";
