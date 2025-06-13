@@ -1,13 +1,10 @@
-package se.sundsvall.messagingsettings.integration.db;
+package se.sundsvall.messagingsettings.integration.db.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import se.sundsvall.messagingsettings.integration.db.entity.MessagingSettingsEntity;
-import se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper;
-import se.sundsvall.messagingsettings.test.annotation.UnitTest;
 
-@UnitTest
 class EntityMapperTest {
 
 	@Test

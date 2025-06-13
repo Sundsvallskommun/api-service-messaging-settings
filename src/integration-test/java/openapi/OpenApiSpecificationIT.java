@@ -14,11 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
 import se.sundsvall.messagingsettings.Application;
-import se.sundsvall.messagingsettings.test.annotation.IntegrationTest;
 
-@IntegrationTest
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = Application.class)
+@ActiveProfiles("it")
 class OpenApiSpecificationIT {
 
 	private static final YAMLMapper YAML_MAPPER = new YAMLMapper();

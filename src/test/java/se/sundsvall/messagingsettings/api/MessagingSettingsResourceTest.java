@@ -13,16 +13,16 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.zalando.problem.Problem;
 import se.sundsvall.messagingsettings.Application;
 import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
 import se.sundsvall.messagingsettings.service.MessagingSettingsService;
-import se.sundsvall.messagingsettings.test.annotation.UnitTest;
 
-@UnitTest
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
+@ActiveProfiles("junit")
 class MessagingSettingsResourceTest {
 
 	@MockitoBean
