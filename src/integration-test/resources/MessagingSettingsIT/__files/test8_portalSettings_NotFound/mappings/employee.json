@@ -4,7 +4,7 @@
 		"url": "/employee/2281/portalpersondata/PERSONAL/TestUser"
 	},
 	"response": {
-		"status": 200,
+		"status": 404,
 		"headers": {
 			"Content-Type": "application/json"
 		},
