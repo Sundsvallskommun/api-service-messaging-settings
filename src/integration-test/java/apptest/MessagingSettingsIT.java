@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.messagingsettings.Application;
@@ -23,6 +24,10 @@ class MessagingSettingsIT extends AbstractAppTest {
 
 	private static final String SENDER_INFO_SERVICE_PATH = "/{municipalityId}/{departmentId}/sender-info";
 	private static final String CALLBACK_EMAIL_SERVICE_PATH = "/{municipalityId}/{departmentId}/callback-email";
+	private static final String PORTAL_SETTINGS_SERVICE_PATH = "/{municipalityId}/portal-settings";
+
+	private static final String HEADER_SENT_BY_VALUE = "TestUser; type=adAccount";
+
 	private static final String RESPONSE_FILE = "response.json";
 
 	@Test
@@ -110,6 +115,51 @@ class MessagingSettingsIT extends AbstractAppTest {
 			.withServicePath(uriBuilder -> uriBuilder
 				.replacePath(CALLBACK_EMAIL_SERVICE_PATH)
 				.build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test7_portalSettings_OK() {
+		final var municipalityId = "2281";
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(uriBuilder -> uriBuilder
+				.replacePath(PORTAL_SETTINGS_SERVICE_PATH)
+				.build(Map.of("municipalityId", municipalityId)))
+			.withHeader(Identifier.HEADER_NAME, HEADER_SENT_BY_VALUE)
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test8_portalSettings_NotFound() {
+		final var municipalityId = "2281";
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(uriBuilder -> uriBuilder
+				.replacePath(PORTAL_SETTINGS_SERVICE_PATH)
+				.build(Map.of("municipalityId", municipalityId)))
+			.withHeader(Identifier.HEADER_NAME, HEADER_SENT_BY_VALUE)
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test9_portalSettings_BadRequest() {
+		final var municipalityId = "NON_EXISTING_MUNICIPALITY_ID";
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(uriBuilder -> uriBuilder
+				.replacePath(PORTAL_SETTINGS_SERVICE_PATH)
+				.build(Map.of("municipalityId", municipalityId)))
+			.withHeader(Identifier.HEADER_NAME, HEADER_SENT_BY_VALUE)
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(BAD_REQUEST)
 			.sendRequestAndVerifyResponse();

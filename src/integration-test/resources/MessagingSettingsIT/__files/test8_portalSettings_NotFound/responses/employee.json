@@ -1,0 +1,22 @@
+{
+	"personid": null,
+	"givenname": null,
+	"lastname": null,
+	"fullname": null,
+	"address": null,
+	"postalCode": null,
+	"city": null,
+	"workPhone": null,
+	"mobilePhone": null,
+	"extraMobilePhone": null,
+	"aboutMe": null,
+	"email": null,
+	"mailNickname": null,
+	"company": null,
+	"companyId": null,
+	"orgTree": null,
+	"referenceNumber": null,
+	"isManager": null,
+	"loginName": null,
+	"fullOrgTree": null
+}
