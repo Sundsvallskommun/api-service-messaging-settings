@@ -19,11 +19,13 @@ class PortalSettingsResponseTest {
 			.withSnailMailMethod(snailMailMethod)
 			.build();
 
-		assertThat(result).isInstanceOf(PortalSettingsResponse.class);
-		assertThat(result).hasNoNullFieldsOrProperties();
-		assertThat(result.getMunicipalityId()).isEqualTo(municipalityId);
-		assertThat(result.getDepartmentName()).isEqualTo(departmentName);
-		assertThat(result.getSnailMailMethod()).isEqualTo(snailMailMethod);
+		assertThat(result)
+			.isInstanceOf(PortalSettingsResponse.class)
+			.hasNoNullFieldsOrProperties()
+			.extracting(PortalSettingsResponse::getMunicipalityId,
+				PortalSettingsResponse::getDepartmentName,
+				PortalSettingsResponse::getSnailMailMethod)
+			.containsExactly(municipalityId, departmentName, snailMailMethod);
 	}
 
 	@Test
