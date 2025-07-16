@@ -19,6 +19,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
+import se.sundsvall.messagingsettings.api.model.PortalSettingsResponse;
 import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
 import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 
@@ -41,6 +42,7 @@ class MessagingSettingsResource {
 
 	static final String GET_SENDER_INFO_PATH = "/{municipalityId}/{departmentId}/sender-info";
 	static final String GET_CALLBACK_EMAIL_PATH = "/{municipalityId}/{departmentId}/callback-email";
+	static final String GET_PORTAL_SETTINGS_PATH = "/{municipalityId}/portal-settings";
 
 	private final MessagingSettingsService messagingSettingsService;
 
@@ -68,5 +70,16 @@ class MessagingSettingsResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId,
 		@Parameter(name = "departmentId", description = "Department ID", example = "SKM") @PathVariable(name = "departmentId") final String departmentId) {
 		return ok(messagingSettingsService.getCallbackEmailByMunicipalityIdAndDepartmentId(municipalityId, departmentId));
+	}
+
+	@GetMapping(path = GET_PORTAL_SETTINGS_PATH, produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get portal settings", description = "Get portal settings for given department.", responses = {
+		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+	})
+	ResponseEntity<PortalSettingsResponse> getPortalSettings(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId) {
+		final var user = messagingSettingsService.getUser();
+		return ok(messagingSettingsService.getPortalSettings(municipalityId, user));
 	}
 }

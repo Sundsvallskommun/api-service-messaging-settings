@@ -108,6 +108,48 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  /{municipalityId}/portal-settings:
+    get:
+      tags:
+        - Messaging Settings
+      summary: Get portal settings
+      description: Get portal settings for given department.
+      operationId: getPortalSettings
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalSettingsResponse"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /api-docs:
     get:
       tags:
@@ -141,9 +183,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
     StatusType:
       type: object
@@ -276,9 +318,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
         suppressed:
           type: array
@@ -352,4 +394,25 @@ components:
           description: Callback e-mail address
           example: no-reply@domain.tld
       description: CallbackEmail response
+    PortalSettingsResponse:
+      type: object
+      properties:
+        municipalityId:
+          type: string
+          description: Municipality ID
+          example: "2281"
+        departmentName:
+          type: string
+          description: Department name
+          example: SKM
+        snailMailMethod:
+          type: string
+          description: Method of delivery
+          example: EMAIL
+          enum:
+            - EMAIL
+            - SC_ADMIN
+            - SC_ADMIN
+            - EMAIL
+      description: PortalSettings response
   securitySchemes: {}

@@ -1,0 +1,22 @@
+{
+	"personid": null,
+	"givenname": null,
+	"lastname": null,
+	"fullname": null,
+	"address": null,
+	"postalCode": null,
+	"city": null,
+	"workPhone": null,
+	"mobilePhone": null,
+	"extraMobilePhone": null,
+	"aboutMe": null,
+	"email": null,
+	"mailNickname": null,
+	"company": null,
+	"companyId": null,
+	"orgTree": "1|2281|SK¤2|SKM|dept44",
+	"referenceNumber": null,
+	"isManager": null,
+	"loginName": "TestUser",
+	"fullOrgTree": null
+}
