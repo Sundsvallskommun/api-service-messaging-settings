@@ -21,6 +21,9 @@ public class SenderInfoResponse {
 	@Schema(description = "Contact information e-mail address", example = "sundsvalls.kommun@sundsvall.se")
 	private String contactInformationEmail;
 
+	@Schema(description = "Name of contact information e-mail sender", example = "Sundsvalls kommun")
+	private String contactInformationEmailName;
+
 	@Schema(description = "Name of SMS sender", example = "Sundsvall")
 	private String smsSender;
 }

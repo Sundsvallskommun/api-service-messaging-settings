@@ -164,4 +164,50 @@ class MessagingSettingsIT extends AbstractAppTest {
 			.withExpectedResponseStatus(BAD_REQUEST)
 			.sendRequestAndVerifyResponse();
 	}
+
+	@Test
+	void test10_senderInfo_namespace_OK() {
+		final var municipalityId = "2281";
+		final var namespace = "SBK";
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(uriBuilder -> uriBuilder
+				.replacePath("/{municipalityId}/{namespace}/sender-infos")
+				.build(Map.of("municipalityId", municipalityId, "namespace", namespace)))
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test11_senderInfo_namespace_BadRequest() {
+		final var municipalityId = "INVALID_MUNICIPALITY";
+		final var namespace = "SBK";
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(uriBuilder -> uriBuilder
+				.replacePath("/{municipalityId}/{namespace}/sender-infos")
+				.build(Map.of("municipalityId", municipalityId, "namespace", namespace)))
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test12_senderInfo_namespace_departmentName_OK() {
+		final var municipalityId = "2281";
+		final var namespace = "SBK";
+		final var departmentName = "dept44";
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(uriBuilder -> uriBuilder
+				.replacePath("/{municipalityId}/{namespace}/{departmentName}/sender-info")
+				.build(Map.of("municipalityId", municipalityId, "namespace", namespace, "departmentName", departmentName)))
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
 }

@@ -14,6 +14,7 @@ class EntityMapperTest {
 			.withContactInformationUrl("https://domain.tld/")
 			.withContactInformationPhoneNumber("123-98 76 54")
 			.withContactInformationEmail("test@domain.tld")
+			.withContactInformationEmailName("Test Name")
 			.withSmsSender("SK")
 			.build();
 		final var senderInfo = EntityMapper.toSenderInfo(entity);
@@ -23,6 +24,7 @@ class EntityMapperTest {
 		assertThat(senderInfo.getContactInformationUrl()).isEqualTo(entity.getContactInformationUrl());
 		assertThat(senderInfo.getContactInformationPhoneNumber()).isEqualTo(entity.getContactInformationPhoneNumber());
 		assertThat(senderInfo.getContactInformationEmail()).isEqualTo(entity.getContactInformationEmail());
+		assertThat(senderInfo.getContactInformationEmailName()).isEqualTo(entity.getContactInformationEmailName());
 		assertThat(senderInfo.getSmsSender()).isEqualTo(entity.getSmsSender());
 	}
 
