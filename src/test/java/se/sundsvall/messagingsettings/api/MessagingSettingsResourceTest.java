@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.messagingsettings.api.MessagingSettingsResource.GET_SENDER_INFO_PATH;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ class MessagingSettingsResourceTest {
 			.thenReturn(senderInfoResponse);
 
 		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path(GET_SENDER_INFO_PATH).build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/{departmentId}/sender-info").build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
 			.exchange()
 			.expectStatus().isOk()
 			.expectBody(SenderInfoResponse.class)
@@ -66,7 +65,7 @@ class MessagingSettingsResourceTest {
 			.thenThrow(Problem.valueOf(NOT_FOUND));
 
 		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path(GET_SENDER_INFO_PATH).build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/{departmentId}/sender-info").build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
 			.exchange()
 			.expectStatus().isNotFound();
 
@@ -80,7 +79,7 @@ class MessagingSettingsResourceTest {
 		final var departmentId = "dep";
 
 		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path(GET_SENDER_INFO_PATH).build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/{departmentId}/sender-info").build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
 			.exchange()
 			.expectStatus().isEqualTo(BAD_REQUEST)
 			.expectBody(Problem.class);

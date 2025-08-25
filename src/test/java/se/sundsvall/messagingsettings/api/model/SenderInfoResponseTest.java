@@ -12,6 +12,7 @@ class SenderInfoResponseTest {
 		final var contactInformationUrl = "url";
 		final var contactInformationPhoneNumber = "phone number";
 		final var contactInformationEmail = "email";
+		final var contactInformationEmailName = "email name";
 		final var smsSender = "sender name";
 
 		final var senderInfo = SenderInfoResponse.builder()
@@ -19,6 +20,7 @@ class SenderInfoResponseTest {
 			.withContactInformationUrl(contactInformationUrl)
 			.withContactInformationPhoneNumber(contactInformationPhoneNumber)
 			.withContactInformationEmail(contactInformationEmail)
+			.withContactInformationEmailName(contactInformationEmailName)
 			.withSmsSender(smsSender)
 			.build();
 
@@ -27,7 +29,9 @@ class SenderInfoResponseTest {
 		assertThat(senderInfo.getContactInformationUrl()).isEqualTo(contactInformationUrl);
 		assertThat(senderInfo.getContactInformationPhoneNumber()).isEqualTo(contactInformationPhoneNumber);
 		assertThat(senderInfo.getContactInformationEmail()).isEqualTo(contactInformationEmail);
+		assertThat(senderInfo.getContactInformationEmailName()).isEqualTo(contactInformationEmailName);
 		assertThat(senderInfo.getSmsSender()).isEqualTo(smsSender);
+		assertThat(senderInfo).hasNoNullFieldsOrProperties();
 	}
 
 	@Test

@@ -10,7 +10,9 @@ import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ER
 import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND;
 import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_PORTAL_SETTINGS_NOT_FOUND;
 import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_SENDER_INFO_NOT_FOUND;
+import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_SENDER_INFO_NOT_FOUND_BY_NAMESPACE;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +31,7 @@ import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 class MessagingSettingsServiceTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
+	private static final String NAMESPACE = "Sundsvall";
 	private static final String DEPARTMENT_ID = "dept44";
 	private static final String LOGIN_NAME = "testuser";
 
@@ -62,6 +65,45 @@ class MessagingSettingsServiceTest {
 			.isInstanceOf(ThrowableProblem.class)
 			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
 			.hasMessageContaining(ERROR_MESSAGE_SENDER_INFO_NOT_FOUND.formatted(MUNICIPALITY_ID, DEPARTMENT_ID));
+	}
+
+	@Test
+	void getSenderInfoByMunicipalityIdAndNamespace() {
+		var entity1 = MessagingSettingsEntity.builder().build();
+		var entity2 = MessagingSettingsEntity.builder().build();
+		when(mockMessagingSettingsRepository.findAllByMunicipalityIdAndNamespace(MUNICIPALITY_ID, NAMESPACE))
+			.thenReturn(List.of(entity1, entity2));
+
+		assertThat(messagingSettingsService.getSenderInfoByMunicipalityIdAndNamespace(MUNICIPALITY_ID, NAMESPACE))
+			.hasSize(2)
+			.allSatisfy(response -> assertThat(response).isInstanceOf(SenderInfoResponse.class));
+
+		verify(mockMessagingSettingsRepository).findAllByMunicipalityIdAndNamespace(MUNICIPALITY_ID, NAMESPACE);
+		verifyNoMoreInteractions(mockMessagingSettingsRepository);
+	}
+
+	@Test
+	void getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName() {
+		var entity = MessagingSettingsEntity.builder().build();
+		when(mockMessagingSettingsRepository.findByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID))
+			.thenReturn(Optional.of(entity));
+
+		assertThat(messagingSettingsService.getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID))
+			.isInstanceOf(SenderInfoResponse.class);
+
+		verify(mockMessagingSettingsRepository).findByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID);
+		verifyNoMoreInteractions(mockMessagingSettingsRepository);
+	}
+
+	@Test
+	void getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName_throwsNotFoundProblem() {
+		when(mockMessagingSettingsRepository.findByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID))
+			.thenReturn(Optional.empty());
+
+		assertThatThrownBy(() -> messagingSettingsService.getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID))
+			.isInstanceOf(ThrowableProblem.class)
+			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
+			.hasMessageContaining(ERROR_MESSAGE_SENDER_INFO_NOT_FOUND_BY_NAMESPACE.formatted(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID));
 	}
 
 	@Test

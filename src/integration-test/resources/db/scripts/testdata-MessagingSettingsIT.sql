@@ -1,8 +1,16 @@
-insert into messaging_settings (id, municipality_id, department_id, department_name,
+insert into messaging_settings (id, municipality_id, namespace, department_id, department_name,
                                 snail_mail_method, callback_email, support_text,
                                 contact_information_url, contact_information_phone_number,
-                                contact_information_email, sms_sender, created, updated)
-values ("475dcfd4-21d5-4f1d-9aac-fbf247f889b7", "2281", "SKM", "dept44", "EMAIL", "no-reply@localhost.local",
+                                contact_information_email, contact_information_email_name, sms_sender, created, updated)
+values ("475dcfd4-21d5-4f1d-9aac-fbf247f889b7", "2281", "SBK", "SKM", "dept44", "EMAIL", "no-reply@localhost.local",
         "Kontakta oss via e-post eller telefon", "https://domain.tld/",
-        "101-22 11 40", "no-reply@localhost.local", "SENDER NAME",
+        "101-22 11 40", "no-reply@localhost.local", "dept44 Name", "SENDER NAME",
+        "2025-05-01 10:00:00.000000", "2025-05-01 11:00:00.000000"),
+       ("475dcfd4-21d5-4f1d-9aac-fbf247f889b8", "2281", "SBK", "12", "dept45", "EMAIL", "no-reply@localhost.local",
+        "Kontakta oss via e-post eller telefon", "https://domain.tld/",
+        "101-22 11 40", "no-reply@localhost.local", "dept45 Name", "SENDER NAME",
+        "2025-05-01 10:00:00.000000", "2025-05-01 11:00:00.000000"),
+       ("475dcfd4-21d5-4f1d-9aac-fbf247f889b9", "2281", null, "123", "dept123", "EMAIL", "no-reply@localhost.local",
+        "Kontakta oss via e-post eller telefon", "https://domain.tld/",
+        "101-22 11 40", "no-reply@localhost.local", "dept123 Name", "SENDER NAME",
         "2025-05-01 10:00:00.000000", "2025-05-01 11:00:00.000000");
