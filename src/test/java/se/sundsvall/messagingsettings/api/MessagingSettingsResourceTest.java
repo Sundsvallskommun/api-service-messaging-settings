@@ -6,8 +6,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.zalando.problem.Status.NOT_FOUND;
 
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,44 +42,28 @@ class MessagingSettingsResourceTest {
 			.withSmsSender("sender name")
 			.build();
 
-		when(mockMessagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId))
-			.thenReturn(senderInfoResponse);
+		when(mockMessagingSettingsService.getSenderInfo(municipalityId, departmentId, null, null))
+			.thenReturn(List.of(senderInfoResponse));
 
 		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/{departmentId}/sender-info").build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.uri(uriBuilder -> uriBuilder
+				.path("/{municipalityId}/sender-info")
+				.queryParam("departmentId", departmentId)
+				.build(Map.of("municipalityId", municipalityId)))
 			.exchange()
 			.expectStatus().isOk()
-			.expectBody(SenderInfoResponse.class)
-			.isEqualTo(senderInfoResponse);
+			.expectBodyList(SenderInfoResponse.class)
+			.contains(senderInfoResponse);
 
-		verify(mockMessagingSettingsService).getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId);
-		verifyNoMoreInteractions(mockMessagingSettingsService);
-	}
-
-	@Test
-	void getSenderInfoReturnsNotFound() {
-		final var municipalityId = "2281";
-		final var departmentId = "dep";
-
-		when(mockMessagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId))
-			.thenThrow(Problem.valueOf(NOT_FOUND));
-
-		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/{departmentId}/sender-info").build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
-			.exchange()
-			.expectStatus().isNotFound();
-
-		verify(mockMessagingSettingsService).getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId);
+		verify(mockMessagingSettingsService).getSenderInfo(municipalityId, departmentId, null, null);
 		verifyNoMoreInteractions(mockMessagingSettingsService);
 	}
 
 	@Test
 	void getSenderInfoReturnsBadRequest() {
 		final var municipalityId = "9999";
-		final var departmentId = "dep";
-
 		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/{departmentId}/sender-info").build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/sender-info").build(Map.of("municipalityId", municipalityId)))
 			.exchange()
 			.expectStatus().isEqualTo(BAD_REQUEST)
 			.expectBody(Problem.class);

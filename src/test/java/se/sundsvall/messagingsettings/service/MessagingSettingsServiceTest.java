@@ -1,5 +1,6 @@
 package se.sundsvall.messagingsettings.service;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
@@ -9,13 +10,15 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_CALLBACK_EMAIL_NOT_FOUND;
 import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND;
 import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_PORTAL_SETTINGS_NOT_FOUND;
-import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_SENDER_INFO_NOT_FOUND;
-import static se.sundsvall.messagingsettings.service.MessagingSettingsService.ERROR_MESSAGE_SENDER_INFO_NOT_FOUND_BY_NAMESPACE;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,6 +36,7 @@ class MessagingSettingsServiceTest {
 	private static final String MUNICIPALITY_ID = "2281";
 	private static final String NAMESPACE = "Sundsvall";
 	private static final String DEPARTMENT_ID = "dept44";
+	private static final String DEPARTMENT_NAME = "Department 44";
 	private static final String LOGIN_NAME = "testuser";
 
 	@Mock
@@ -44,84 +48,48 @@ class MessagingSettingsServiceTest {
 	@InjectMocks
 	private MessagingSettingsService messagingSettingsService;
 
-	@Test
-	void getSenderInfoByMunicipalityIdAndDepartmentId() {
-		when(mockMessagingSettingsRepository.findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
-			.thenReturn(Optional.of(MessagingSettingsEntity.builder().build()));
+	@ParameterizedTest
+	@MethodSource("senderInfoProvider")
+	void getSenderInfo(String municipalityId, String departmentId, String departmentName, String namespace) {
+		when(mockMessagingSettingsRepository.findAllBySpecification(municipalityId, departmentId, departmentName, namespace))
+			.thenReturn(List.of(
+				MessagingSettingsEntity.builder().build(),
+				MessagingSettingsEntity.builder().build()));
 
-		assertThat(messagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
-			.isInstanceOf(SenderInfoResponse.class);
-
-		verify(mockMessagingSettingsRepository).findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID);
-		verifyNoMoreInteractions(mockMessagingSettingsRepository);
-	}
-
-	@Test
-	void getSenderInfoByMunicipalityIdAndDepartmentId_throwsNotFoundProblem() {
-		when(mockMessagingSettingsRepository.findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
-			.thenReturn(Optional.empty());
-
-		assertThatThrownBy(() -> messagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
-			.isInstanceOf(ThrowableProblem.class)
-			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
-			.hasMessageContaining(ERROR_MESSAGE_SENDER_INFO_NOT_FOUND.formatted(MUNICIPALITY_ID, DEPARTMENT_ID));
-	}
-
-	@Test
-	void getSenderInfoByMunicipalityIdAndNamespace() {
-		var entity1 = MessagingSettingsEntity.builder().build();
-		var entity2 = MessagingSettingsEntity.builder().build();
-		when(mockMessagingSettingsRepository.findAllByMunicipalityIdAndNamespace(MUNICIPALITY_ID, NAMESPACE))
-			.thenReturn(List.of(entity1, entity2));
-
-		assertThat(messagingSettingsService.getSenderInfoByMunicipalityIdAndNamespace(MUNICIPALITY_ID, NAMESPACE))
+		assertThat(messagingSettingsService.getSenderInfo(municipalityId, departmentId, departmentName, namespace))
 			.hasSize(2)
 			.allSatisfy(response -> assertThat(response).isInstanceOf(SenderInfoResponse.class));
 
-		verify(mockMessagingSettingsRepository).findAllByMunicipalityIdAndNamespace(MUNICIPALITY_ID, NAMESPACE);
+		verify(mockMessagingSettingsRepository).findAllBySpecification(municipalityId, departmentId, departmentName, namespace);
 		verifyNoMoreInteractions(mockMessagingSettingsRepository);
 	}
 
-	@Test
-	void getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName() {
-		var entity = MessagingSettingsEntity.builder().build();
-		when(mockMessagingSettingsRepository.findByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID))
-			.thenReturn(Optional.of(entity));
-
-		assertThat(messagingSettingsService.getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID))
-			.isInstanceOf(SenderInfoResponse.class);
-
-		verify(mockMessagingSettingsRepository).findByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID);
-		verifyNoMoreInteractions(mockMessagingSettingsRepository);
-	}
-
-	@Test
-	void getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName_throwsNotFoundProblem() {
-		when(mockMessagingSettingsRepository.findByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID))
-			.thenReturn(Optional.empty());
-
-		assertThatThrownBy(() -> messagingSettingsService.getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID))
-			.isInstanceOf(ThrowableProblem.class)
-			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
-			.hasMessageContaining(ERROR_MESSAGE_SENDER_INFO_NOT_FOUND_BY_NAMESPACE.formatted(MUNICIPALITY_ID, NAMESPACE, DEPARTMENT_ID));
+	private static Stream<Arguments> senderInfoProvider() {
+		return Stream.of(
+			Arguments.of(MUNICIPALITY_ID, DEPARTMENT_ID, DEPARTMENT_NAME, NAMESPACE),
+			Arguments.of(null, DEPARTMENT_ID, DEPARTMENT_NAME, NAMESPACE),
+			Arguments.of(MUNICIPALITY_ID, null, DEPARTMENT_NAME, NAMESPACE),
+			Arguments.of(MUNICIPALITY_ID, DEPARTMENT_ID, null, NAMESPACE),
+			Arguments.of(MUNICIPALITY_ID, DEPARTMENT_ID, DEPARTMENT_NAME, null),
+			Arguments.of(null, null, null, null));
 	}
 
 	@Test
 	void getCallbackEmailByMunicipalityIdAndDepartmentId() {
-		when(mockMessagingSettingsRepository.findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
-			.thenReturn(Optional.of(MessagingSettingsEntity.builder().build()));
+		when(mockMessagingSettingsRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
+			.thenReturn(List.of(MessagingSettingsEntity.builder().build()));
 
 		assertThat(messagingSettingsService.getCallbackEmailByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
 			.isInstanceOf(CallbackEmailResponse.class);
 
-		verify(mockMessagingSettingsRepository).findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID);
+		verify(mockMessagingSettingsRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
 		verifyNoMoreInteractions(mockMessagingSettingsRepository);
 	}
 
 	@Test
 	void getCallbackEmailByMunicipalityIdAndDepartmentId_throwsNotFoundProblem() {
-		when(mockMessagingSettingsRepository.findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
-			.thenReturn(Optional.empty());
+		when(mockMessagingSettingsRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
+			.thenReturn(emptyList());
 
 		assertThatThrownBy(() -> messagingSettingsService.getCallbackEmailByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
 			.isInstanceOf(ThrowableProblem.class)
@@ -135,13 +103,13 @@ class MessagingSettingsServiceTest {
 
 		when(mockEmployeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME))
 			.thenReturn(Optional.of(departmentInfo));
-		when(mockMessagingSettingsRepository.findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
-			.thenReturn(Optional.of(MessagingSettingsEntity.builder().build()));
+		when(mockMessagingSettingsRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
+			.thenReturn(List.of(MessagingSettingsEntity.builder().build()));
 
 		messagingSettingsService.getPortalSettings(MUNICIPALITY_ID, LOGIN_NAME);
 
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
-		verify(mockMessagingSettingsRepository).findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID);
+		verify(mockMessagingSettingsRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
 		verifyNoMoreInteractions(mockEmployeeIntegration, mockMessagingSettingsRepository);
 	}
 
@@ -165,8 +133,8 @@ class MessagingSettingsServiceTest {
 
 		when(mockEmployeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME))
 			.thenReturn(Optional.of(departmentInfo));
-		when(mockMessagingSettingsRepository.findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
-			.thenReturn(Optional.empty());
+		when(mockMessagingSettingsRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
+			.thenReturn(emptyList());
 
 		assertThatThrownBy(() -> messagingSettingsService.getPortalSettings(MUNICIPALITY_ID, LOGIN_NAME))
 			.isInstanceOf(ThrowableProblem.class)
@@ -174,7 +142,7 @@ class MessagingSettingsServiceTest {
 			.hasMessageContaining(ERROR_MESSAGE_PORTAL_SETTINGS_NOT_FOUND.formatted(MUNICIPALITY_ID, DEPARTMENT_ID));
 
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
-		verify(mockMessagingSettingsRepository).findByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID);
+		verify(mockMessagingSettingsRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
 		verifyNoMoreInteractions(mockEmployeeIntegration, mockMessagingSettingsRepository);
 	}
 }

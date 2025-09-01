@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
@@ -49,33 +50,18 @@ class MessagingSettingsResource {
 		this.messagingSettingsService = messagingSettingsService;
 	}
 
-	@GetMapping(path = "/{departmentId}/sender-info", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get sender info", description = "Get sender info for given department and municipality.", responses = {
+	@GetMapping(path = "/sender-info", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get sender info", description = "Get sender info, optionally filtered by any combination of department id, department name and namespace.", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
 	})
-	ResponseEntity<SenderInfoResponse> getSenderInfo(
-		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId,
-		@Parameter(name = "departmentId", description = "Department ID", example = "SKM") @PathVariable(name = "departmentId") final String departmentId) {
-		return ok(messagingSettingsService.getSenderInfoByMunicipalityIdAndDepartmentId(municipalityId, departmentId));
-	}
+	ResponseEntity<List<SenderInfoResponse>> getSenderInfo(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "departmentId", description = "Department ID", example = "28") @RequestParam(required = false) final String departmentId,
+		@Parameter(name = "departmentName", description = "Department name", example = "Sundsvalls kommun") @RequestParam(required = false) final String departmentName,
+		@Parameter(name = "namespace", description = "Namespace", example = "Namespace 1") @RequestParam(required = false) final String namespace) {
 
-	@GetMapping(path = "/{namespace}/sender-infos", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get sender info", description = "Get sender information for a given municipality and namespace.")
-	@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
-	ResponseEntity<List<SenderInfoResponse>> getSenderInfoByNamespace(
-		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId,
-		@Parameter(name = "namespace", description = "Namespace", example = "SKM") @PathVariable(name = "namespace") final String namespace) {
-		return ok(messagingSettingsService.getSenderInfoByMunicipalityIdAndNamespace(municipalityId, namespace));
-	}
-
-	@GetMapping("/{namespace}/{departmentName}/sender-info")
-	ResponseEntity<SenderInfoResponse> getSenderInfoByNamespaceAndDepartmentName(
-		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId,
-		@Parameter(name = "namespace", description = "Namespace", example = "SKM") @PathVariable(name = "namespace") final String namespace,
-		@Parameter(name = "departmentName", description = "Department name", example = "Sundsvalls kommun") @PathVariable(name = "departmentName") final String departmentName) {
-
-		return ok(messagingSettingsService.getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName(municipalityId, namespace, departmentName));
+		return ok(messagingSettingsService.getSenderInfo(municipalityId, departmentId, departmentName, namespace));
 	}
 
 	@GetMapping(path = "/{departmentId}/callback-email", produces = APPLICATION_JSON_VALUE)
