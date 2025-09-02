@@ -5,7 +5,6 @@ import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toCallbackEmail;
 import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toPortalSettings;
-import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toSenderInfo;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -38,36 +37,26 @@ public class MessagingSettingsService {
 		this.employeeIntegration = employeeIntegration;
 	}
 
-	public SenderInfoResponse getSenderInfoByMunicipalityIdAndDepartmentId(final String municipalityId, final String departmentId) {
-		var settings = messagingSettingsRepository.findByMunicipalityIdAndDepartmentId(municipalityId, departmentId)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_SENDER_INFO_NOT_FOUND.formatted(municipalityId, departmentId)));
-		return toSenderInfo(settings);
-	}
-
-	public List<SenderInfoResponse> getSenderInfoByMunicipalityIdAndNamespace(final String municipalityId, final String namespace) {
-		return messagingSettingsRepository.findAllByMunicipalityIdAndNamespace(municipalityId, namespace).stream()
+	public List<SenderInfoResponse> getSenderInfo(final String municipalityId, final String departmentId, final String departmentName, final String namespace) {
+		return messagingSettingsRepository.findAllBySpecification(municipalityId, departmentId, departmentName, namespace).stream()
 			.map(EntityMapper::toSenderInfo)
 			.toList();
 	}
 
-	public SenderInfoResponse getSenderInfoByMunicipalityIdAndNamespaceAndDepartmentName(final String municipalityId, final String namespace, final String departmentName) {
-		return messagingSettingsRepository.findByMunicipalityIdAndNamespaceAndDepartmentName(municipalityId, namespace, departmentName)
-			.map(EntityMapper::toSenderInfo)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_SENDER_INFO_NOT_FOUND_BY_NAMESPACE.formatted(municipalityId, namespace, departmentName)));
-	}
-
 	public CallbackEmailResponse getCallbackEmailByMunicipalityIdAndDepartmentId(final String municipalityId, final String departmentId) {
-		var settings = messagingSettingsRepository.findByMunicipalityIdAndDepartmentId(municipalityId, departmentId)
+		final var settings = messagingSettingsRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
+			.findFirst()
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_CALLBACK_EMAIL_NOT_FOUND.formatted(municipalityId, departmentId)));
 		return toCallbackEmail(settings);
 	}
 
 	public PortalSettingsResponse getPortalSettings(final String municipalityId, final String loginName) {
-		var departmentId = employeeIntegration.getDepartmentInfo(municipalityId, loginName)
+		final var departmentId = employeeIntegration.getDepartmentInfo(municipalityId, loginName)
 			.map(DepartmentInfo::id)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND.formatted(loginName)));
 
-		var settings = messagingSettingsRepository.findByMunicipalityIdAndDepartmentId(municipalityId, departmentId)
+		final var settings = messagingSettingsRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
+			.findFirst()
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_PORTAL_SETTINGS_NOT_FOUND.formatted(municipalityId, departmentId)));
 
 		return toPortalSettings(settings);

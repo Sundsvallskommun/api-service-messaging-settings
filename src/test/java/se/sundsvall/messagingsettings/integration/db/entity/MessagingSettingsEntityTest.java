@@ -25,6 +25,7 @@ class MessagingSettingsEntityTest {
 		final var smsSender = "SK";
 		final var created = OffsetDateTime.parse("2025-05-01T10:00:00Z");
 		final var updated = OffsetDateTime.parse("2025-05-01T11:30:00Z");
+		final var organizationNumber = "organizationNumber";
 
 		final var entity = MessagingSettingsEntity.builder()
 			.withId(id)
@@ -32,6 +33,7 @@ class MessagingSettingsEntityTest {
 			.withNamespace(namespace)
 			.withDepartmentId(departmentId)
 			.withDepartmentName(departmentName)
+			.withOrganizationNumber(organizationNumber)
 			.withSnailMailMethod(snailMailMethod)
 			.withCallbackEmail(callbackEmail)
 			.withSupportText(supportText)
@@ -50,6 +52,7 @@ class MessagingSettingsEntityTest {
 		assertThat(entity.getNamespace()).isEqualTo(namespace);
 		assertThat(entity.getDepartmentId()).isEqualTo(departmentId);
 		assertThat(entity.getDepartmentName()).isEqualTo(departmentName);
+		assertThat(entity.getOrganizationNumber()).isEqualTo(organizationNumber);
 		assertThat(entity.getSnailMailMethod()).isEqualTo(snailMailMethod);
 		assertThat(entity.getCallbackEmail()).isEqualTo(callbackEmail);
 		assertThat(entity.getSupportText()).isEqualTo(supportText);
@@ -64,8 +67,7 @@ class MessagingSettingsEntityTest {
 
 	@Test
 	void builderAndGetters_noValues() {
-		final var entity = MessagingSettingsEntity.builder().build();
-
-		assertThat(entity).hasAllNullFieldsOrProperties();
+		assertThat(new MessagingSettingsEntity()).hasAllNullFieldsOrProperties();
+		assertThat(MessagingSettingsEntity.builder().build()).hasAllNullFieldsOrProperties();
 	}
 }

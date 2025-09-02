@@ -26,7 +26,8 @@ import se.sundsvall.messagingsettings.integration.db.entity.enums.SnailMailMetho
 @Table(name = "messaging_settings", indexes = {
 	@Index(name = "idx_messaging_settings_municipality_id_department_id", columnList = "municipality_id, department_id"),
 	@Index(name = "idx_messaging_settings_municipality_id_namespace", columnList = "municipality_id, namespace"),
-	@Index(name = "idx_messaging_settings_municipality_id_namespace_department_id", columnList = "municipality_id, namespace, department_id")
+	@Index(name = "idx_messaging_settings_municipality_id_namespace_department_id", columnList = "municipality_id, namespace, department_id"),
+	@Index(name = "idx_messaging_settings_municipality_id_namespace_department_name", columnList = "municipality_id, namespace, department_name")
 })
 @Data
 @Builder(setterPrefix = "with")
@@ -44,6 +45,9 @@ public class MessagingSettingsEntity {
 
 	@Column(name = "namespace")
 	private String namespace;
+
+	@Column(name = "organization_number", length = 12)
+	private String organizationNumber;
 
 	@Column(name = "department_id")
 	private String departmentId;

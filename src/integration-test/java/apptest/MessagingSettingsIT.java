@@ -5,10 +5,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+
 import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
@@ -22,113 +22,74 @@ import se.sundsvall.messagingsettings.Application;
 })
 class MessagingSettingsIT extends AbstractAppTest {
 
-	private static final String SENDER_INFO_SERVICE_PATH = "/{municipalityId}/{departmentId}/sender-info";
-	private static final String CALLBACK_EMAIL_SERVICE_PATH = "/{municipalityId}/{departmentId}/callback-email";
-	private static final String PORTAL_SETTINGS_SERVICE_PATH = "/{municipalityId}/portal-settings";
-
 	private static final String HEADER_SENT_BY_VALUE = "TestUser; type=adAccount";
-
 	private static final String RESPONSE_FILE = "response.json";
 
 	@Test
-	void test1_senderInfo_OK() {
-		final var municipalityId = "2281";
-		final var departmentId = "SKM";
-
+	void test01_senderInfoByDeparmentId() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(SENDER_INFO_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.withServicePath("/2281/sender-info?departmentId=11")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
 	}
 
 	@Test
-	void test2_senderInfo_NotFound() {
-		final var municipalityId = "2281";
-		final var departmentId = "NON_EXISTING_DEPARTMENT_ID";
-
+	void test02_senderInfoNotFound() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(SENDER_INFO_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
-			.withExpectedResponse(RESPONSE_FILE)
-			.withExpectedResponseStatus(NOT_FOUND)
-			.sendRequestAndVerifyResponse();
-	}
-
-	@Test
-	void test3_senderInfo_BadRequest() {
-		final var municipalityId = "NON_EXISTING_MUNICIPALITY_ID";
-		final var departmentId = "NON_EXISTING_DEPARTMENT_ID";
-
-		setupCall()
-			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(SENDER_INFO_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
-			.withExpectedResponse(RESPONSE_FILE)
-			.withExpectedResponseStatus(BAD_REQUEST)
-			.sendRequestAndVerifyResponse();
-	}
-
-	@Test
-	void test4_callbackEmail_OK() {
-		final var municipalityId = "2281";
-		final var departmentId = "SKM";
-
-		setupCall()
-			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(CALLBACK_EMAIL_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.withServicePath("/2281/sender-info?departmentId=NON_EXISTING_DEPARTMENT_ID")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
 	}
 
 	@Test
-	void test5_callbackEmail_NotFound() {
-		final var municipalityId = "2281";
-		final var departmentId = "NON_EXISTING_DEPARTMENT_ID";
-
+	void test03_senderInfoBadRequest() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(CALLBACK_EMAIL_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
-			.withExpectedResponse(RESPONSE_FILE)
-			.withExpectedResponseStatus(NOT_FOUND)
-			.sendRequestAndVerifyResponse();
-	}
-
-	@Test
-	void test6_callbackEmail_BadRequest() {
-		final var municipalityId = "NON_EXISTING_MUNICIPALITY_ID";
-		final var departmentId = "NON_EXISTING_DEPARTMENT_ID";
-
-		setupCall()
-			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(CALLBACK_EMAIL_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+			.withServicePath("/NOT_VALID_MUNICIPALITY_ID/sender-info")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(BAD_REQUEST)
 			.sendRequestAndVerifyResponse();
 	}
 
 	@Test
-	void test7_portalSettings_OK() {
-		final var municipalityId = "2281";
-
+	void test04_callbackEmail() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(PORTAL_SETTINGS_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId)))
+			.withServicePath("/2281/11/callback-email")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test05_callbackEmailNotFound() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/NON_EXISTING_DEPARTMENT_ID/callback-email")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test06_callbackEmailBadRequest() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/NOT_VALID_MUNICIPALITY_ID/NON_EXISTING_DEPARTMENT_ID/callback-email")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test07_portalSettings() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/portal-settings")
 			.withHeader(Identifier.HEADER_NAME, HEADER_SENT_BY_VALUE)
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
@@ -136,14 +97,10 @@ class MessagingSettingsIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test8_portalSettings_NotFound() {
-		final var municipalityId = "2281";
-
+	void test08_portalSettingsNotFound() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(PORTAL_SETTINGS_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId)))
+			.withServicePath("/2281/portal-settings")
 			.withHeader(Identifier.HEADER_NAME, HEADER_SENT_BY_VALUE)
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(NOT_FOUND)
@@ -151,14 +108,10 @@ class MessagingSettingsIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test9_portalSettings_BadRequest() {
-		final var municipalityId = "NON_EXISTING_MUNICIPALITY_ID";
-
+	void test09_portalSettingsBadRequest() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath(PORTAL_SETTINGS_SERVICE_PATH)
-				.build(Map.of("municipalityId", municipalityId)))
+			.withServicePath("/NOT_VALID_MUNICIPALITY_ID/portal-settings")
 			.withHeader(Identifier.HEADER_NAME, HEADER_SENT_BY_VALUE)
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(BAD_REQUEST)
@@ -166,46 +119,20 @@ class MessagingSettingsIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test10_senderInfo_namespace_OK() {
-		final var municipalityId = "2281";
-		final var namespace = "SBK";
-
+	void test10_senderInfoByNamespace() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath("/{municipalityId}/{namespace}/sender-infos")
-				.build(Map.of("municipalityId", municipalityId, "namespace", namespace)))
+			.withServicePath("/2281/sender-info?namespace=NS1")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
 	}
 
 	@Test
-	void test11_senderInfo_namespace_BadRequest() {
-		final var municipalityId = "INVALID_MUNICIPALITY";
-		final var namespace = "SBK";
-
+	void test12_senderInfoByNamespaceAndDepartmentName() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath("/{municipalityId}/{namespace}/sender-infos")
-				.build(Map.of("municipalityId", municipalityId, "namespace", namespace)))
-			.withExpectedResponse(RESPONSE_FILE)
-			.withExpectedResponseStatus(BAD_REQUEST)
-			.sendRequestAndVerifyResponse();
-	}
-
-	@Test
-	void test12_senderInfo_namespace_departmentName_OK() {
-		final var municipalityId = "2281";
-		final var namespace = "SBK";
-		final var departmentName = "dept44";
-
-		setupCall()
-			.withHttpMethod(GET)
-			.withServicePath(uriBuilder -> uriBuilder
-				.replacePath("/{municipalityId}/{namespace}/{departmentName}/sender-info")
-				.build(Map.of("municipalityId", municipalityId, "namespace", namespace, "departmentName", departmentName)))
+			.withServicePath("/2281/sender-info?namespace=NS1&departmentName=dept44")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();

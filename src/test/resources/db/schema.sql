@@ -2,6 +2,7 @@
     create table messaging_settings (
         created datetime(6),
         updated datetime(6),
+        organization_number varchar(12),
         id varchar(36) not null,
         callback_email varchar(255),
         contact_information_email varchar(255),
@@ -26,3 +27,7 @@
 
     create index idx_messaging_settings_municipality_id_namespace_department_id 
        on messaging_settings (municipality_id, namespace, department_id);
+
+    create index idx_messaging_settings_municipality_id_namespace_department_name 
+       on messaging_settings (municipality_id, namespace, department_name);
+       

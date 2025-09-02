@@ -1,5 +1,10 @@
 {
 	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer 0000000000000000AAAAAAAAAAAAAAAA"
+			}
+		},
 		"method": "GET",
 		"url": "/employee/2281/portalpersondata/PERSONAL/TestUser"
 	},
@@ -8,6 +13,6 @@
 		"headers": {
 			"Content-Type": "application/json"
 		},
-		"bodyFileName": "test8_portalSettings_NotFound/responses/employee.json"
+		"bodyFileName": "test08_portalSettingsNotFound/responses/employee.json"
 	}
 }
