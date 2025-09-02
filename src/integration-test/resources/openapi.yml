@@ -105,12 +105,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/SenderInfoResponse"
-        "404":
-          description: Not Found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
         "400":
           description: Bad Request
           content:
