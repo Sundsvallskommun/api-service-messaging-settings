@@ -3,70 +3,113 @@ package se.sundsvall.messagingsettings.integration.db.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import se.sundsvall.messagingsettings.enums.SnailMailMethod;
 import se.sundsvall.messagingsettings.integration.db.entity.MessagingSettingsEntity;
 
 class EntityMapperTest {
 
 	@Test
 	void toSenderInfo() {
+		final var contactInformationUrl = "contactInformationUrl";
+		final var contactInformationPhoneNumber = "contactInformationPhoneNumber";
+		final var contactInformationEmail = "contactInformationEmail";
+		final var contactInformationEmailName = "contactInformationEmailName";
+		final var organizationNumber = "organizationNumber";
+		final var smsSender = "smsSender";
+		final var supportText = "supportText";
 		final var entity = MessagingSettingsEntity.builder()
-			.withSupportText("Lorem ipsum dolor sit amet")
-			.withContactInformationUrl("https://domain.tld/")
-			.withContactInformationPhoneNumber("123-98 76 54")
-			.withContactInformationEmail("test@domain.tld")
-			.withContactInformationEmailName("Test Name")
-			.withSmsSender("SK")
+			.withContactInformationUrl(contactInformationUrl)
+			.withContactInformationPhoneNumber(contactInformationPhoneNumber)
+			.withContactInformationEmail(contactInformationEmail)
+			.withContactInformationEmailName(contactInformationEmailName)
+			.withOrganizationNumber(organizationNumber)
+			.withSmsSender(smsSender)
+			.withSupportText(supportText)
 			.build();
-		final var senderInfo = EntityMapper.toSenderInfo(entity);
 
-		assertThat(senderInfo).hasNoNullFieldsOrProperties();
-		assertThat(senderInfo.getSupportText()).isEqualTo(entity.getSupportText());
-		assertThat(senderInfo.getContactInformationUrl()).isEqualTo(entity.getContactInformationUrl());
-		assertThat(senderInfo.getContactInformationPhoneNumber()).isEqualTo(entity.getContactInformationPhoneNumber());
-		assertThat(senderInfo.getContactInformationEmail()).isEqualTo(entity.getContactInformationEmail());
-		assertThat(senderInfo.getContactInformationEmailName()).isEqualTo(entity.getContactInformationEmailName());
-		assertThat(senderInfo.getSmsSender()).isEqualTo(entity.getSmsSender());
+		final var result = EntityMapper.toSenderInfo(entity);
+
+		assertThat(result).hasNoNullFieldsOrProperties();
+		assertThat(result.getContactInformationUrl()).isEqualTo(contactInformationUrl);
+		assertThat(result.getContactInformationPhoneNumber()).isEqualTo(contactInformationPhoneNumber);
+		assertThat(result.getContactInformationEmail()).isEqualTo(contactInformationEmail);
+		assertThat(result.getContactInformationEmailName()).isEqualTo(contactInformationEmailName);
+		assertThat(result.getOrganizationNumber()).isEqualTo(organizationNumber);
+		assertThat(result.getSmsSender()).isEqualTo(smsSender);
+		assertThat(result.getSupportText()).isEqualTo(supportText);
 	}
 
 	@Test
 	void toSenderInfo_withNull() {
-		final var senderInfo = EntityMapper.toSenderInfo(null);
-
-		assertThat(senderInfo).isNull();
+		assertThat(EntityMapper.toSenderInfo(null))
+			.isNull();
 	}
 
 	@Test
 	void toSenderInfo_withNullValues() {
-		final var entity = MessagingSettingsEntity.builder().build();
-		final var senderInfo = EntityMapper.toSenderInfo(entity);
-
-		assertThat(senderInfo).hasAllNullFieldsOrProperties();
+		assertThat(EntityMapper.toSenderInfo(MessagingSettingsEntity.builder().build()))
+			.hasAllNullFieldsOrProperties();
 	}
 
 	@Test
 	void toCallbackEmail() {
-		final var email = "test@domain.tld";
-		final var messagingSettingsEntity = MessagingSettingsEntity.builder()
+		final var email = "email";
+		final var organizationNumber = "organizationNumber";
+		final var entity = MessagingSettingsEntity.builder()
 			.withCallbackEmail(email)
+			.withOrganizationNumber(organizationNumber)
 			.build();
-		final var result = EntityMapper.toCallbackEmail(messagingSettingsEntity);
+
+		final var result = EntityMapper.toCallbackEmail(entity);
 
 		assertThat(result).hasNoNullFieldsOrProperties();
 		assertThat(result.getCallbackEmail()).isEqualTo(email);
+		assertThat(result.getOrganizationNumber()).isEqualTo(organizationNumber);
 	}
 
 	@Test
 	void toCallbackEmail_withNull() {
-		final var callbackEmail = EntityMapper.toCallbackEmail(null);
-
-		assertThat(callbackEmail).isNull();
+		assertThat(EntityMapper.toCallbackEmail(null))
+			.isNull();
 	}
 
 	@Test
 	void toCallbackEmail_withNullValues() {
-		final var messagingSettingsEntity = MessagingSettingsEntity.builder().build();
-		final var callbackEmail = EntityMapper.toCallbackEmail(messagingSettingsEntity);
+		assertThat(EntityMapper.toCallbackEmail(MessagingSettingsEntity.builder().build()))
+			.hasAllNullFieldsOrProperties();
+	}
 
-		assertThat(callbackEmail).hasAllNullFieldsOrProperties();
+	@Test
+	void toPortalSettings() {
+		final var departmentName = "departmentName";
+		final var municipalityId = "municipalityId";
+		final var organizationNumber = "organizationNumber";
+		final var snailMailMethod = SnailMailMethod.EMAIL;
+		final var entity = MessagingSettingsEntity.builder()
+			.withDepartmentName(departmentName)
+			.withMunicipalityId(municipalityId)
+			.withOrganizationNumber(organizationNumber)
+			.withSnailMailMethod(snailMailMethod)
+			.build();
+
+		final var result = EntityMapper.toPortalSettings(entity);
+
+		assertThat(result).hasNoNullFieldsOrProperties();
+		assertThat(result.getDepartmentName()).isEqualTo(departmentName);
+		assertThat(result.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(result.getOrganizationNumber()).isEqualTo(organizationNumber);
+		assertThat(result.getSnailMailMethod()).isEqualTo(snailMailMethod);
+	}
+
+	@Test
+	void toPortalSettings_withNull() {
+		assertThat(EntityMapper.toPortalSettings(null))
+			.isNull();
+	}
+
+	@Test
+	void toPortalSettings_withNullValues() {
+		assertThat(EntityMapper.toPortalSettings(MessagingSettingsEntity.builder().build()))
+			.hasAllNullFieldsOrProperties();
 	}
 }

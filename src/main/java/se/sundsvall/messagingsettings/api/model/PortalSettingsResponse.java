@@ -1,14 +1,22 @@
 package se.sundsvall.messagingsettings.api.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import se.sundsvall.messagingsettings.integration.db.entity.enums.SnailMailMethod;
+import lombok.NoArgsConstructor;
+import se.sundsvall.messagingsettings.enums.SnailMailMethod;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Builder(setterPrefix = "with")
 @Schema(description = "PortalSettings response")
 public class PortalSettingsResponse {
+
+	@Schema(description = "Organization number of the organization connected to the information", example = "162021005489")
+	private String organizationNumber;
 
 	@Schema(description = "Municipality ID", example = "2281")
 	private String municipalityId;
@@ -16,8 +24,6 @@ public class PortalSettingsResponse {
 	@Schema(description = "Department name", example = "SKM")
 	private String departmentName;
 
-	@Schema(description = "Method of delivery", example = "EMAIL", allowableValues = {
-		"SC_ADMIN", "EMAIL"
-	})
+	@Schema(description = "Method of delivery", example = "EMAIL")
 	private SnailMailMethod snailMailMethod;
 }

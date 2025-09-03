@@ -20,7 +20,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.TimeZoneStorageType;
 import org.hibernate.annotations.UpdateTimestamp;
-import se.sundsvall.messagingsettings.integration.db.entity.enums.SnailMailMethod;
+import se.sundsvall.messagingsettings.enums.SnailMailMethod;
 
 @Entity
 @Table(name = "messaging_settings", indexes = {
