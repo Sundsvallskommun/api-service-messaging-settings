@@ -1,5 +1,6 @@
 [
 	{
+		"organizationNumber": "161234567890",
 		"supportText": "Kontakta oss via e-post eller telefon",
 		"contactInformationUrl": "https://domain.tld/",
 		"contactInformationPhoneNumber": "101-22 11 40",
@@ -8,6 +9,7 @@
 		"smsSender": "SENDER NAME"
 	},
 	{
+		"organizationNumber": "160987654321",
 		"supportText": "Kontakta oss via e-post eller telefon",
 		"contactInformationUrl": "https://domain.tld/",
 		"contactInformationPhoneNumber": "101-22 11 40",

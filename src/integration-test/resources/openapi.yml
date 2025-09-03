@@ -185,6 +185,7 @@ paths:
         description: Department ID
         required: true
         schema:
+          minLength: 1
           type: string
         example: SKM
       responses:
@@ -349,9 +350,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
     StatusType:
       type: object
@@ -484,9 +485,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
         suppressed:
           type: array
@@ -531,6 +532,10 @@ components:
     SenderInfoResponse:
       type: object
       properties:
+        organizationNumber:
+          type: string
+          description: Organization number of the organization connected to the information
+          example: "162021005489"
         supportText:
           type: string
           description: Descriptive support text
@@ -559,6 +564,10 @@ components:
     CallbackEmailResponse:
       type: object
       properties:
+        organizationNumber:
+          type: string
+          description: Organization number of the organization connected to the information
+          example: "162021005489"
         callbackEmail:
           type: string
           description: Callback e-mail address
@@ -567,6 +576,10 @@ components:
     PortalSettingsResponse:
       type: object
       properties:
+        organizationNumber:
+          type: string
+          description: Organization number of the organization connected to the information
+          example: "162021005489"
         municipalityId:
           type: string
           description: Municipality ID
@@ -582,7 +595,5 @@ components:
           enum:
           - EMAIL
           - SC_ADMIN
-          - SC_ADMIN
-          - EMAIL
       description: PortalSettings response
   securitySchemes: {}

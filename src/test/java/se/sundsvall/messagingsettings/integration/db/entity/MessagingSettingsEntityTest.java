@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.messagingsettings.integration.db.entity.enums.SnailMailMethod;
+import se.sundsvall.messagingsettings.enums.SnailMailMethod;
 
 class MessagingSettingsEntityTest {
 

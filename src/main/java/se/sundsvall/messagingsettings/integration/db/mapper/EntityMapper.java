@@ -14,12 +14,13 @@ public class EntityMapper {
 	public static SenderInfoResponse toSenderInfo(final MessagingSettingsEntity entity) {
 		return ofNullable(entity)
 			.map(e -> SenderInfoResponse.builder()
-				.withSupportText(e.getSupportText())
 				.withContactInformationUrl(e.getContactInformationUrl())
 				.withContactInformationPhoneNumber(e.getContactInformationPhoneNumber())
 				.withContactInformationEmail(e.getContactInformationEmail())
 				.withContactInformationEmailName(e.getContactInformationEmailName())
+				.withOrganizationNumber(e.getOrganizationNumber())
 				.withSmsSender(e.getSmsSender())
+				.withSupportText(e.getSupportText())
 				.build())
 			.orElse(null);
 	}
@@ -28,6 +29,7 @@ public class EntityMapper {
 		return ofNullable(entity)
 			.map(e -> CallbackEmailResponse.builder()
 				.withCallbackEmail(e.getCallbackEmail())
+				.withOrganizationNumber(e.getOrganizationNumber())
 				.build())
 			.orElse(null);
 	}
@@ -35,8 +37,9 @@ public class EntityMapper {
 	public static PortalSettingsResponse toPortalSettings(final MessagingSettingsEntity entity) {
 		return ofNullable(entity)
 			.map(e -> PortalSettingsResponse.builder()
-				.withMunicipalityId(e.getMunicipalityId())
 				.withDepartmentName(e.getDepartmentName())
+				.withMunicipalityId(e.getMunicipalityId())
+				.withOrganizationNumber(e.getOrganizationNumber())
 				.withSnailMailMethod(e.getSnailMailMethod())
 				.build())
 			.orElse(null);
