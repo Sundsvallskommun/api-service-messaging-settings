@@ -36,11 +36,13 @@ public class EntityMapper {
 
 	public static PortalSettingsResponse toPortalSettings(final MessagingSettingsEntity entity) {
 		return ofNullable(entity)
-			.map(e -> PortalSettingsResponse.builder()
-				.withDepartmentName(e.getDepartmentName())
-				.withMunicipalityId(e.getMunicipalityId())
-				.withOrganizationNumber(e.getOrganizationNumber())
-				.withSnailMailMethod(e.getSnailMailMethod())
+			.map(messagingSettingsEntity -> PortalSettingsResponse.builder()
+				.withDepartmentName(messagingSettingsEntity.getDepartmentName())
+				.withMunicipalityId(messagingSettingsEntity.getMunicipalityId())
+				.withOrganizationNumber(messagingSettingsEntity.getOrganizationNumber())
+				.withSnailMailMethod(messagingSettingsEntity.getSnailMailMethod())
+				.withRekEnabled(messagingSettingsEntity.isRekEnabled())
+				.withSmsEnabled(messagingSettingsEntity.isSmsEnabled())
 				.build())
 			.orElse(null);
 	}

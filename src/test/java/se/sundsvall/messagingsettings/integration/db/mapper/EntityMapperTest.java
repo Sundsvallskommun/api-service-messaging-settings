@@ -90,6 +90,8 @@ class EntityMapperTest {
 			.withMunicipalityId(municipalityId)
 			.withOrganizationNumber(organizationNumber)
 			.withSnailMailMethod(snailMailMethod)
+			.withRekEnabled(false)
+			.withSmsEnabled(true)
 			.build();
 
 		final var result = EntityMapper.toPortalSettings(entity);
@@ -99,6 +101,8 @@ class EntityMapperTest {
 		assertThat(result.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(result.getOrganizationNumber()).isEqualTo(organizationNumber);
 		assertThat(result.getSnailMailMethod()).isEqualTo(snailMailMethod);
+		assertThat(result.getRekEnabled()).isFalse();
+		assertThat(result.getSmsEnabled()).isTrue();
 	}
 
 	@Test
@@ -110,6 +114,6 @@ class EntityMapperTest {
 	@Test
 	void toPortalSettings_withNullValues() {
 		assertThat(EntityMapper.toPortalSettings(MessagingSettingsEntity.builder().build()))
-			.hasAllNullFieldsOrProperties();
+			.hasAllNullFieldsOrPropertiesExcept("rekEnabled", "smsEnabled");
 	}
 }

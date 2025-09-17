@@ -89,4 +89,10 @@ public class MessagingSettingsEntity {
 	@Column(name = "updated")
 	@TimeZoneStorage(TimeZoneStorageType.NORMALIZE_UTC)
 	private OffsetDateTime updated;
+
+	@Column(name = "sms_enabled")
+	private boolean smsEnabled;
+
+	@Column(name = "rek_enabled")
+	private boolean rekEnabled;
 }

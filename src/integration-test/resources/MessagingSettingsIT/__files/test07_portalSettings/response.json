@@ -2,5 +2,7 @@
 	"organizationNumber": "161234567890",
 	"municipalityId": "2281",
 	"departmentName": "dept44",
-	"snailMailMethod": "EMAIL"
+	"snailMailMethod": "EMAIL",
+	"smsEnabled": true,
+	"rekEnabled": true
 }

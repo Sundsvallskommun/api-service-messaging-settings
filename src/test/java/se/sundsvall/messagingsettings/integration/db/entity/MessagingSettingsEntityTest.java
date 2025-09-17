@@ -26,6 +26,8 @@ class MessagingSettingsEntityTest {
 		final var created = OffsetDateTime.parse("2025-05-01T10:00:00Z");
 		final var updated = OffsetDateTime.parse("2025-05-01T11:30:00Z");
 		final var organizationNumber = "organizationNumber";
+		final var smsEnabled = true;
+		final var rekEnabled = true;
 
 		final var entity = MessagingSettingsEntity.builder()
 			.withId(id)
@@ -44,6 +46,8 @@ class MessagingSettingsEntityTest {
 			.withSmsSender(smsSender)
 			.withCreated(created)
 			.withUpdated(updated)
+			.withRekEnabled(rekEnabled)
+			.withSmsEnabled(smsEnabled)
 			.build();
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
@@ -63,11 +67,13 @@ class MessagingSettingsEntityTest {
 		assertThat(entity.getSmsSender()).isEqualTo(smsSender);
 		assertThat(entity.getCreated()).isEqualTo(created);
 		assertThat(entity.getUpdated()).isEqualTo(updated);
+		assertThat(entity.isSmsEnabled()).isEqualTo(smsEnabled);
+		assertThat(entity.isRekEnabled()).isEqualTo(rekEnabled);
 	}
 
 	@Test
 	void builderAndGetters_noValues() {
-		assertThat(new MessagingSettingsEntity()).hasAllNullFieldsOrProperties();
-		assertThat(MessagingSettingsEntity.builder().build()).hasAllNullFieldsOrProperties();
+		assertThat(new MessagingSettingsEntity()).hasAllNullFieldsOrPropertiesExcept("rekEnabled", "smsEnabled");
+		assertThat(MessagingSettingsEntity.builder().build()).hasAllNullFieldsOrPropertiesExcept("rekEnabled", "smsEnabled");
 	}
 }

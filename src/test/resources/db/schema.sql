@@ -1,5 +1,7 @@
 
     create table messaging_settings (
+        rek_enabled bit,
+        sms_enabled bit,
         created datetime(6),
         updated datetime(6),
         organization_number varchar(12),
@@ -30,4 +32,3 @@
 
     create index idx_messaging_settings_municipality_id_namespace_department_name 
        on messaging_settings (municipality_id, namespace, department_name);
-       
