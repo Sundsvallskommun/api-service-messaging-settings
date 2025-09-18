@@ -30,12 +30,16 @@ class PortalSettingsResponseTest {
 		final var municipalityId = "2281";
 		final var organizationNumber = "organizationNumber";
 		final var snailMailMethod = SnailMailMethod.EMAIL;
+		final var smsEnabled = true;
+		final var rekEnabled = false;
 
 		final var result = PortalSettingsResponse.builder()
 			.withDepartmentName(departmentName)
 			.withMunicipalityId(municipalityId)
 			.withOrganizationNumber(organizationNumber)
 			.withSnailMailMethod(snailMailMethod)
+			.withSmsEnabled(smsEnabled)
+			.withRekEnabled(rekEnabled)
 			.build();
 
 		assertThat(result)
@@ -45,12 +49,16 @@ class PortalSettingsResponseTest {
 				PortalSettingsResponse::getDepartmentName,
 				PortalSettingsResponse::getMunicipalityId,
 				PortalSettingsResponse::getOrganizationNumber,
-				PortalSettingsResponse::getSnailMailMethod)
+				PortalSettingsResponse::getSnailMailMethod,
+				PortalSettingsResponse::getSmsEnabled,
+				PortalSettingsResponse::getRekEnabled)
 			.containsExactly(
 				departmentName,
 				municipalityId,
 				organizationNumber,
-				snailMailMethod);
+				snailMailMethod,
+				smsEnabled,
+				rekEnabled);
 	}
 
 	@Test

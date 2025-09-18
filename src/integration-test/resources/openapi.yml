@@ -1,46 +1,46 @@
 openapi: 3.0.1
 info:
   title: api-service-messaging-settings
-  contact: {}
+  contact: { }
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "1.2"
+  version: "1.3"
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:54815
+    description: Generated server url
 paths:
   /{municipalityId}/{namespace}/{departmentName}/sender-info:
     get:
       tags:
-      - Messaging Settings
+        - Messaging Settings
       summary: Get sender info
       description: "Get sender information for a given municipality, namespace and\
         \ department name (the resource is deprecated, use /sender-info with parameters\
         \ instead)."
       operationId: getSenderInfoByNamespaceAndDepartmentName
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: namespace
-        in: path
-        description: Namespace
-        required: true
-        schema:
-          type: string
-        example: SKM
-      - name: departmentName
-        in: path
-        description: Department name
-        required: true
-        schema:
-          type: string
-        example: Sundsvalls kommun
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: namespace
+          in: path
+          description: Namespace
+          required: true
+          schema:
+            type: string
+          example: SKM
+        - name: departmentName
+          in: path
+          description: Department name
+          required: true
+          schema:
+            type: string
+          example: Sundsvalls kommun
       responses:
         "400":
           description: Bad Request
@@ -48,8 +48,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -60,26 +60,26 @@ paths:
   /{municipalityId}/{namespace}/sender-infos:
     get:
       tags:
-      - Messaging Settings
+        - Messaging Settings
       summary: Get sender info
       description: "Get sender information for a given municipality and namespace\
         \ (the resource is deprecated, use /sender-info with parameters instead)."
       operationId: getSenderInfoByNamespace
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: namespace
-        in: path
-        description: Namespace
-        required: true
-        schema:
-          type: string
-        example: SKM
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: namespace
+          in: path
+          description: Namespace
+          required: true
+          schema:
+            type: string
+          example: SKM
       responses:
         "400":
           description: Bad Request
@@ -87,8 +87,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
             application/json:
               schema:
                 type: array
@@ -117,26 +117,26 @@ paths:
   /{municipalityId}/{departmentId}/sender-info:
     get:
       tags:
-      - Messaging Settings
+        - Messaging Settings
       summary: Get sender info
       description: "Get sender info for given department and municipality (the resource\
         \ is deprecated, use /sender-info with parameters instead)."
       operationId: getSenderInfo
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: departmentId
-        in: path
-        description: Department ID
-        required: true
-        schema:
-          type: string
-        example: SKM
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: departmentId
+          in: path
+          description: Department ID
+          required: true
+          schema:
+            type: string
+          example: SKM
       responses:
         "200":
           description: OK
@@ -156,8 +156,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -168,26 +168,26 @@ paths:
   /{municipalityId}/{departmentId}/callback-email:
     get:
       tags:
-      - Messaging Settings
+        - Messaging Settings
       summary: Get callback email
       description: Get callback e-mail for given department and municipality.
       operationId: getCallbackEmail
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: departmentId
-        in: path
-        description: Department ID
-        required: true
-        schema:
-          minLength: 1
-          type: string
-        example: SKM
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: departmentId
+          in: path
+          description: Department ID
+          required: true
+          schema:
+            minLength: 1
+            type: string
+          example: SKM
       responses:
         "200":
           description: OK
@@ -207,8 +207,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -218,40 +218,40 @@ paths:
   /{municipalityId}/sender-info:
     get:
       tags:
-      - Messaging Settings
+        - Messaging Settings
       summary: Get sender info
       description: "Get sender info, optionally filtered by any combination of department\
         \ id, department name and namespace."
       operationId: getSenderInfo_1
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: departmentId
-        in: query
-        description: Department ID
-        required: false
-        schema:
-          type: string
-        example: 28
-      - name: departmentName
-        in: query
-        description: Department name
-        required: false
-        schema:
-          type: string
-        example: Sundsvalls kommun
-      - name: namespace
-        in: query
-        description: Namespace
-        required: false
-        schema:
-          type: string
-        example: Namespace 1
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: departmentId
+          in: query
+          description: Department ID
+          required: false
+          schema:
+            type: string
+          example: 28
+        - name: departmentName
+          in: query
+          description: Department name
+          required: false
+          schema:
+            type: string
+          example: Sundsvalls kommun
+        - name: namespace
+          in: query
+          description: Namespace
+          required: false
+          schema:
+            type: string
+          example: Namespace 1
       responses:
         "200":
           description: OK
@@ -267,8 +267,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -278,18 +278,18 @@ paths:
   /{municipalityId}/portal-settings:
     get:
       tags:
-      - Messaging Settings
+        - Messaging Settings
       summary: Get portal settings
       description: Get portal settings for given department.
       operationId: getPortalSettings
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
       responses:
         "200":
           description: OK
@@ -309,8 +309,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -320,7 +320,7 @@ paths:
   /api-docs:
     get:
       tags:
-      - API
+        - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -350,9 +350,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
     StatusType:
       type: object
@@ -485,9 +485,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
         suppressed:
           type: array
@@ -593,7 +593,15 @@ components:
           description: Method of delivery
           example: EMAIL
           enum:
-          - EMAIL
-          - SC_ADMIN
+            - EMAIL
+            - SC_ADMIN
+        smsEnabled:
+          type: boolean
+          description: Indicates if sms is enabled for the given department
+          example: true
+        rekEnabled:
+          type: boolean
+          description: Indicates if rek is enabled for the given department
+          example: true
       description: PortalSettings response
-  securitySchemes: {}
+  securitySchemes: { }

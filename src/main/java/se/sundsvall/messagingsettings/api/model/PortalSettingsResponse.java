@@ -26,4 +26,10 @@ public class PortalSettingsResponse {
 
 	@Schema(description = "Method of delivery", example = "EMAIL")
 	private SnailMailMethod snailMailMethod;
+
+	@Schema(description = "Indicates if sms is enabled for the given department", example = "true")
+	private Boolean smsEnabled;
+
+	@Schema(description = "Indicates if rek is enabled for the given department", example = "true")
+	private Boolean rekEnabled;
 }
