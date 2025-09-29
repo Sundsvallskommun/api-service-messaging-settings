@@ -23,6 +23,7 @@ class MessagingSettingsEntityTest {
 		final var contactInformationEmail = "test@domain.tld";
 		final var contactInformationEmailName = "Test";
 		final var smsSender = "SK";
+		final var folderName = "random folder name";
 		final var created = OffsetDateTime.parse("2025-05-01T10:00:00Z");
 		final var updated = OffsetDateTime.parse("2025-05-01T11:30:00Z");
 		final var organizationNumber = "organizationNumber";
@@ -39,6 +40,7 @@ class MessagingSettingsEntityTest {
 			.withSnailMailMethod(snailMailMethod)
 			.withCallbackEmail(callbackEmail)
 			.withSupportText(supportText)
+			.withFolderName(folderName)
 			.withContactInformationUrl(contactInformationUrl)
 			.withContactInformationPhoneNumber(contactInformationPhoneNumber)
 			.withContactInformationEmail(contactInformationEmail)
@@ -60,6 +62,7 @@ class MessagingSettingsEntityTest {
 		assertThat(entity.getSnailMailMethod()).isEqualTo(snailMailMethod);
 		assertThat(entity.getCallbackEmail()).isEqualTo(callbackEmail);
 		assertThat(entity.getSupportText()).isEqualTo(supportText);
+		assertThat(entity.getFolderName()).isEqualTo(folderName);
 		assertThat(entity.getContactInformationUrl()).isEqualTo(contactInformationUrl);
 		assertThat(entity.getContactInformationPhoneNumber()).isEqualTo(contactInformationPhoneNumber);
 		assertThat(entity.getContactInformationEmail()).isEqualTo(contactInformationEmail);

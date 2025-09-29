@@ -34,4 +34,7 @@ public class SenderInfoResponse {
 
 	@Schema(description = "Name of SMS sender", example = "Sundsvall")
 	private String smsSender;
+
+	@Schema(description = "Folder name", example = "Foo")
+	private String folderName;
 }

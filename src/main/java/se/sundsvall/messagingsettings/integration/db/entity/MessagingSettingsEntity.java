@@ -80,6 +80,9 @@ public class MessagingSettingsEntity {
 	@Column(name = "sms_sender")
 	private String smsSender;
 
+	@Column(name = "folder_name")
+	private String folderName;
+
 	@CreationTimestamp
 	@Column(name = "created")
 	@TimeZoneStorage(TimeZoneStorageType.NORMALIZE_UTC)
