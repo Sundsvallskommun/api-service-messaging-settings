@@ -6,6 +6,7 @@
 		"contactInformationPhoneNumber": "101-22 11 40",
 		"contactInformationEmail": "no-reply@localhost.local",
 		"contactInformationEmailName": "dept44 Name",
-		"smsSender": "SENDER NAME"
+		"smsSender": "SENDER NAME",
+		"folderName": "FOLDER NAME"
 	}
 ]

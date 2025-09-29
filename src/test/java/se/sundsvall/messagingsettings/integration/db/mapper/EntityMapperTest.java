@@ -17,6 +17,7 @@ class EntityMapperTest {
 		final var organizationNumber = "organizationNumber";
 		final var smsSender = "smsSender";
 		final var supportText = "supportText";
+		final var folderName = "folderName";
 		final var entity = MessagingSettingsEntity.builder()
 			.withContactInformationUrl(contactInformationUrl)
 			.withContactInformationPhoneNumber(contactInformationPhoneNumber)
@@ -25,6 +26,7 @@ class EntityMapperTest {
 			.withOrganizationNumber(organizationNumber)
 			.withSmsSender(smsSender)
 			.withSupportText(supportText)
+			.withFolderName(folderName)
 			.build();
 
 		final var result = EntityMapper.toSenderInfo(entity);
@@ -37,6 +39,7 @@ class EntityMapperTest {
 		assertThat(result.getOrganizationNumber()).isEqualTo(organizationNumber);
 		assertThat(result.getSmsSender()).isEqualTo(smsSender);
 		assertThat(result.getSupportText()).isEqualTo(supportText);
+		assertThat(result.getFolderName()).isEqualTo(folderName);
 	}
 
 	@Test

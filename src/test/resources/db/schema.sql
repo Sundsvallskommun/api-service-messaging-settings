@@ -13,6 +13,7 @@
         contact_information_url varchar(255),
         department_id varchar(255),
         department_name varchar(255),
+        folder_name varchar(255),
         municipality_id varchar(255),
         namespace varchar(255),
         sms_sender varchar(255),

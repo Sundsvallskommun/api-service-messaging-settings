@@ -6,7 +6,8 @@
 		"contactInformationPhoneNumber": "101-22 11 40",
 		"contactInformationEmail": "no-reply@localhost.local",
 		"contactInformationEmailName": "dept44 Name",
-		"smsSender": "SENDER NAME"
+		"smsSender": "SENDER NAME",
+		"folderName": "FOLDER NAME"
 	},
 	{
 		"organizationNumber": "160987654321",
@@ -15,6 +16,7 @@
 		"contactInformationPhoneNumber": "101-22 11 40",
 		"contactInformationEmail": "no-reply@localhost.local",
 		"contactInformationEmailName": "dept45 Name",
-		"smsSender": "SENDER NAME"
+		"smsSender": "SENDER NAME",
+		"folderName": "FOLDER NAME"
 	}
 ]

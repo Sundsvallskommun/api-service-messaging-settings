@@ -21,6 +21,7 @@ public class EntityMapper {
 				.withOrganizationNumber(e.getOrganizationNumber())
 				.withSmsSender(e.getSmsSender())
 				.withSupportText(e.getSupportText())
+				.withFolderName(e.getFolderName())
 				.build())
 			.orElse(null);
 	}

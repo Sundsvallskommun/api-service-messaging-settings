@@ -32,6 +32,7 @@ class SenderInfoResponseTest {
 		final var organizationNumber = "organizationNumber";
 		final var supportText = "text";
 		final var smsSender = "sender name";
+		final var folderName = "folder name";
 
 		final var senderInfo = SenderInfoResponse.builder()
 			.withContactInformationUrl(contactInformationUrl)
@@ -41,6 +42,7 @@ class SenderInfoResponseTest {
 			.withOrganizationNumber(organizationNumber)
 			.withSmsSender(smsSender)
 			.withSupportText(supportText)
+			.withFolderName(folderName)
 			.build();
 
 		assertThat(senderInfo).isInstanceOf(SenderInfoResponse.class).hasNoNullFieldsOrProperties();
@@ -51,6 +53,7 @@ class SenderInfoResponseTest {
 		assertThat(senderInfo.getOrganizationNumber()).isEqualTo(organizationNumber);
 		assertThat(senderInfo.getSmsSender()).isEqualTo(smsSender);
 		assertThat(senderInfo.getSupportText()).isEqualTo(supportText);
+		assertThat(senderInfo.getFolderName()).isEqualTo(folderName);
 	}
 
 	@Test
