@@ -1,17 +1,17 @@
 -- Create tables for updated db model
 create table messaging_setting (
+    municipality_id varchar(5) not null,
     created datetime(6),
     updated datetime(6),
     id varchar(36) not null,
-    municipality_id varchar(255),
     primary key (id)
 ) engine=InnoDB;
 
 create table messaging_setting_value (
     messaging_setting_id varchar(36) not null,
-    `key` varchar(255),
-    `value` text,
-    `type` enum ('BOOLEAN','NUMERIC','STRING')
+    `key` varchar(255) not null,
+    `value` text not null,
+    `type` enum ('BOOLEAN','NUMERIC','STRING') not null
 ) engine=InnoDB;
 
 create index idx_messaging_setting_municipality_id 
