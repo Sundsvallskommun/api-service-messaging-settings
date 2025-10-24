@@ -13,7 +13,7 @@ import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
 import se.sundsvall.messagingsettings.api.model.PortalSettingsResponse;
 import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
-import se.sundsvall.messagingsettings.integration.db.MessagingSettingsRepository;
+import se.sundsvall.messagingsettings.integration.db.MessagingSettingRepository;
 import se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper;
 import se.sundsvall.messagingsettings.integration.employee.EmployeeIntegration;
 import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
@@ -28,23 +28,23 @@ public class MessagingSettingsService {
 	static final String ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND = "Could not determine organizational affiliation for user with login name '%s'.";
 	static final String ERROR_MESSAGE_USER_IDENTIFIER_NOT_FOUND = "User identifier not found.";
 
-	private final MessagingSettingsRepository messagingSettingsRepository;
+	private final MessagingSettingRepository messagingSettingRepository;
 	private final EmployeeIntegration employeeIntegration;
 
-	public MessagingSettingsService(final MessagingSettingsRepository messagingSettingsRepository,
+	public MessagingSettingsService(final MessagingSettingRepository messagingSettingRepository,
 		final EmployeeIntegration employeeIntegration) {
-		this.messagingSettingsRepository = messagingSettingsRepository;
+		this.messagingSettingRepository = messagingSettingRepository;
 		this.employeeIntegration = employeeIntegration;
 	}
 
 	public List<SenderInfoResponse> getSenderInfo(final String municipalityId, final String departmentId, final String departmentName, final String namespace) {
-		return messagingSettingsRepository.findAllBySpecification(municipalityId, departmentId, departmentName, namespace).stream()
+		return messagingSettingRepository.findAllBySpecification(municipalityId, departmentId, departmentName, namespace).stream()
 			.map(EntityMapper::toSenderInfo)
 			.toList();
 	}
 
 	public CallbackEmailResponse getCallbackEmailByMunicipalityIdAndDepartmentId(final String municipalityId, final String departmentId) {
-		final var settings = messagingSettingsRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
+		final var settings = messagingSettingRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
 			.findFirst()
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_CALLBACK_EMAIL_NOT_FOUND.formatted(municipalityId, departmentId)));
 		return toCallbackEmail(settings);
@@ -55,7 +55,7 @@ public class MessagingSettingsService {
 			.map(DepartmentInfo::id)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND.formatted(loginName)));
 
-		final var settings = messagingSettingsRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
+		final var settings = messagingSettingRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
 			.findFirst()
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_PORTAL_SETTINGS_NOT_FOUND.formatted(municipalityId, departmentId)));
 

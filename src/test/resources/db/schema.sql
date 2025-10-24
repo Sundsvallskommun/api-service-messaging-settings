@@ -1,35 +1,28 @@
-
-    create table messaging_settings (
-        rek_enabled bit,
-        sms_enabled bit,
+    create table messaging_setting (
+        municipality_id varchar(5) not null,
         created datetime(6),
         updated datetime(6),
-        organization_number varchar(12),
         id varchar(36) not null,
-        callback_email varchar(255),
-        contact_information_email varchar(255),
-        contact_information_email_name varchar(255),
-        contact_information_phone_number varchar(255),
-        contact_information_url varchar(255),
-        department_id varchar(255),
-        department_name varchar(255),
-        folder_name varchar(255),
-        municipality_id varchar(255),
-        namespace varchar(255),
-        sms_sender varchar(255),
-        support_text text,
-        snail_mail_method enum ('EMAIL','SC_ADMIN'),
         primary key (id)
     ) engine=InnoDB;
 
-    create index idx_messaging_settings_municipality_id_department_id 
-       on messaging_settings (municipality_id, department_id);
+	create table messaging_setting_value (
+	    messaging_setting_id varchar(36) not null,
+	    `key` varchar(255) not null,
+	    `value` text not null,
+	    `type` enum ('BOOLEAN','NUMERIC','STRING') not null
+	) engine=InnoDB;
 
-    create index idx_messaging_settings_municipality_id_namespace 
-       on messaging_settings (municipality_id, namespace);
+    create index idx_messaging_setting_municipality_id 
+       on messaging_setting (municipality_id);
 
-    create index idx_messaging_settings_municipality_id_namespace_department_id 
-       on messaging_settings (municipality_id, namespace, department_id);
+    create index idx_messaging_setting_value_messaging_setting_id_key 
+       on messaging_setting_value (messaging_setting_id, `key`);
 
-    create index idx_messaging_settings_municipality_id_namespace_department_name 
-       on messaging_settings (municipality_id, namespace, department_name);
+    alter table if exists messaging_setting_value 
+       add constraint uk_messaging_setting_id_key_value unique (messaging_setting_id, `key`, `value`);
+
+    alter table if exists messaging_setting_value 
+       add constraint fk_messaging_setting_value_messaging_setting 
+       foreign key (messaging_setting_id) 
+       references messaging_setting (id);

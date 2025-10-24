@@ -25,8 +25,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
 import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
-import se.sundsvall.messagingsettings.integration.db.MessagingSettingsRepository;
-import se.sundsvall.messagingsettings.integration.db.entity.MessagingSettingsEntity;
+import se.sundsvall.messagingsettings.integration.db.MessagingSettingRepository;
+import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.integration.employee.EmployeeIntegration;
 import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 
@@ -40,7 +40,7 @@ class MessagingSettingsServiceTest {
 	private static final String LOGIN_NAME = "testuser";
 
 	@Mock
-	private MessagingSettingsRepository mockMessagingSettingsRepository;
+	private MessagingSettingRepository mockMessagingSettingRepository;
 
 	@Mock
 	private EmployeeIntegration mockEmployeeIntegration;
@@ -51,17 +51,17 @@ class MessagingSettingsServiceTest {
 	@ParameterizedTest
 	@MethodSource("senderInfoProvider")
 	void getSenderInfo(String municipalityId, String departmentId, String departmentName, String namespace) {
-		when(mockMessagingSettingsRepository.findAllBySpecification(municipalityId, departmentId, departmentName, namespace))
+		when(mockMessagingSettingRepository.findAllBySpecification(municipalityId, departmentId, departmentName, namespace))
 			.thenReturn(List.of(
-				MessagingSettingsEntity.builder().build(),
-				MessagingSettingsEntity.builder().build()));
+				MessagingSettingEntity.builder().build(),
+				MessagingSettingEntity.builder().build()));
 
 		assertThat(messagingSettingsService.getSenderInfo(municipalityId, departmentId, departmentName, namespace))
 			.hasSize(2)
 			.allSatisfy(response -> assertThat(response).isInstanceOf(SenderInfoResponse.class));
 
-		verify(mockMessagingSettingsRepository).findAllBySpecification(municipalityId, departmentId, departmentName, namespace);
-		verifyNoMoreInteractions(mockMessagingSettingsRepository);
+		verify(mockMessagingSettingRepository).findAllBySpecification(municipalityId, departmentId, departmentName, namespace);
+		verifyNoMoreInteractions(mockMessagingSettingRepository);
 	}
 
 	private static Stream<Arguments> senderInfoProvider() {
@@ -76,19 +76,19 @@ class MessagingSettingsServiceTest {
 
 	@Test
 	void getCallbackEmailByMunicipalityIdAndDepartmentId() {
-		when(mockMessagingSettingsRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
-			.thenReturn(List.of(MessagingSettingsEntity.builder().build()));
+		when(mockMessagingSettingRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
+			.thenReturn(List.of(MessagingSettingEntity.builder().build()));
 
 		assertThat(messagingSettingsService.getCallbackEmailByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
 			.isInstanceOf(CallbackEmailResponse.class);
 
-		verify(mockMessagingSettingsRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
-		verifyNoMoreInteractions(mockMessagingSettingsRepository);
+		verify(mockMessagingSettingRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
+		verifyNoMoreInteractions(mockMessagingSettingRepository);
 	}
 
 	@Test
 	void getCallbackEmailByMunicipalityIdAndDepartmentId_throwsNotFoundProblem() {
-		when(mockMessagingSettingsRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
+		when(mockMessagingSettingRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
 			.thenReturn(emptyList());
 
 		assertThatThrownBy(() -> messagingSettingsService.getCallbackEmailByMunicipalityIdAndDepartmentId(MUNICIPALITY_ID, DEPARTMENT_ID))
@@ -103,14 +103,14 @@ class MessagingSettingsServiceTest {
 
 		when(mockEmployeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME))
 			.thenReturn(Optional.of(departmentInfo));
-		when(mockMessagingSettingsRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
-			.thenReturn(List.of(MessagingSettingsEntity.builder().build()));
+		when(mockMessagingSettingRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
+			.thenReturn(List.of(MessagingSettingEntity.builder().build()));
 
 		messagingSettingsService.getPortalSettings(MUNICIPALITY_ID, LOGIN_NAME);
 
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
-		verify(mockMessagingSettingsRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
-		verifyNoMoreInteractions(mockEmployeeIntegration, mockMessagingSettingsRepository);
+		verify(mockMessagingSettingRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
+		verifyNoMoreInteractions(mockEmployeeIntegration, mockMessagingSettingRepository);
 	}
 
 	@Test
@@ -124,7 +124,7 @@ class MessagingSettingsServiceTest {
 			.hasMessageContaining(ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND.formatted(LOGIN_NAME));
 
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
-		verifyNoMoreInteractions(mockEmployeeIntegration, mockMessagingSettingsRepository);
+		verifyNoMoreInteractions(mockEmployeeIntegration, mockMessagingSettingRepository);
 	}
 
 	@Test
@@ -133,7 +133,7 @@ class MessagingSettingsServiceTest {
 
 		when(mockEmployeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME))
 			.thenReturn(Optional.of(departmentInfo));
-		when(mockMessagingSettingsRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
+		when(mockMessagingSettingRepository.findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null))
 			.thenReturn(emptyList());
 
 		assertThatThrownBy(() -> messagingSettingsService.getPortalSettings(MUNICIPALITY_ID, LOGIN_NAME))
@@ -142,7 +142,7 @@ class MessagingSettingsServiceTest {
 			.hasMessageContaining(ERROR_MESSAGE_PORTAL_SETTINGS_NOT_FOUND.formatted(MUNICIPALITY_ID, DEPARTMENT_ID));
 
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
-		verify(mockMessagingSettingsRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
-		verifyNoMoreInteractions(mockEmployeeIntegration, mockMessagingSettingsRepository);
+		verify(mockMessagingSettingRepository).findAllBySpecification(MUNICIPALITY_ID, DEPARTMENT_ID, null, null);
+		verifyNoMoreInteractions(mockEmployeeIntegration, mockMessagingSettingRepository);
 	}
 }

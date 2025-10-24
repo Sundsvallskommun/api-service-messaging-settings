@@ -24,7 +24,6 @@ class SchemaVerificationTest {
 
 	@Test
 	void verifySchemaUpdates() throws IOException, URISyntaxException {
-
 		final var storedSchema = getResourceString(STORED_SCHEMA_FILE);
 		final var generatedSchema = Files.readString(Path.of(generatedSchemaFile));
 
