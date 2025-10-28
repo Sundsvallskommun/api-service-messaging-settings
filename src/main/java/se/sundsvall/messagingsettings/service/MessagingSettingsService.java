@@ -44,9 +44,9 @@ public class MessagingSettingsService {
 	}
 
 	/**
-	 * @deprecated since 2025-10-25
+	 * @deprecated Deprecated since 2025-10-25
 	 */
-	@Deprecated(since = "2025-10-25", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	public List<SenderInfoResponse> getSenderInfo(final String municipalityId, final String departmentId, final String departmentName, final String namespace) {
 		return messagingSettingRepository.findAllBySpecification(municipalityId, departmentId, departmentName, namespace).stream()
 			.map(EntityMapper::toSenderInfo)
@@ -54,9 +54,9 @@ public class MessagingSettingsService {
 	}
 
 	/**
-	 * @deprecated since 2025-10-25
+	 * @deprecated Deprecated since 2025-10-25
 	 */
-	@Deprecated(since = "2025-10-25", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	public CallbackEmailResponse getCallbackEmailByMunicipalityIdAndDepartmentId(final String municipalityId, final String departmentId) {
 		final var settings = messagingSettingRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
 			.findFirst()
@@ -65,9 +65,9 @@ public class MessagingSettingsService {
 	}
 
 	/**
-	 * @deprecated since 2025-10-25
+	 * @deprecated Deprecated since 2025-10-25
 	 */
-	@Deprecated(since = "2025-10-25", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	public PortalSettingsResponse getPortalSettings(final String municipalityId, final String loginName) {
 		final var departmentId = employeeIntegration.getDepartmentInfo(municipalityId, loginName)
 			.map(DepartmentInfo::id)
@@ -81,9 +81,9 @@ public class MessagingSettingsService {
 	}
 
 	/**
-	 * @deprecated since 2025-10-25
+	 * @deprecated Deprecated since 2025-10-25
 	 */
-	@Deprecated(since = "2025-10-25", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	public String getUser() {
 		return ofNullable(Identifier.get())
 			.map(Identifier::getValue)

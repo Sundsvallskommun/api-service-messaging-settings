@@ -58,7 +58,7 @@ class MessagingSettingsDeprecatedResource20251025 {
 	 * @deprecated Deprecated since 2025-10-25. Use resource with optionally filters that returns dynamic setting value list
 	 *             instead.
 	 */
-	@Deprecated(since = "2025-10-25", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	@GetMapping(path = "/sender-info", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get sender info", description = "Get sender info, optionally filtered by any combination of department id, department name and namespace.", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
@@ -76,7 +76,7 @@ class MessagingSettingsDeprecatedResource20251025 {
 	 * @deprecated Deprecated since 2025-10-25. Use resource with optionally filters that returns dynamic setting value list
 	 *             instead.
 	 */
-	@Deprecated(since = "2025-10-25", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	@GetMapping(path = "/{departmentId}/callback-email", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get callback email", description = "Get callback e-mail for given department and municipality.", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
@@ -91,7 +91,7 @@ class MessagingSettingsDeprecatedResource20251025 {
 	/**
 	 * @deprecated Deprecated since 2025-10-25. Use resource that returns dynamic setting value list for user instead.
 	 */
-	@Deprecated(since = "2025-10-25", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	@GetMapping(path = "/portal-settings", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get portal settings", description = "Get portal settings for given department.", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),

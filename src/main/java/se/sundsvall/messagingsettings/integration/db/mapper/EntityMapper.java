@@ -32,7 +32,10 @@ public class EntityMapper {
 
 	private EntityMapper() {}
 
-	@Deprecated(since = "20251025")
+	/**
+	 * @deprecated Deprecated since 2025-10-25
+	 */
+	@Deprecated(since = "2.0")
 	public static SenderInfoResponse toSenderInfo(final MessagingSettingEntity nullableSettingEntity) {
 		return ofNullable(nullableSettingEntity)
 			.map(settingEntity -> SenderInfoResponse.builder()
@@ -48,7 +51,10 @@ public class EntityMapper {
 			.orElse(null);
 	}
 
-	@Deprecated(since = "20251025")
+	/**
+	 * @deprecated Deprecated since 2025-10-25
+	 */
+	@Deprecated(since = "2.0")
 	public static CallbackEmailResponse toCallbackEmail(final MessagingSettingEntity nullableSettingEntity) {
 		return ofNullable(nullableSettingEntity)
 			.map(settingEntity -> CallbackEmailResponse.builder()
@@ -58,7 +64,10 @@ public class EntityMapper {
 			.orElse(null);
 	}
 
-	@Deprecated(since = "20251025")
+	/**
+	 * @deprecated Deprecated since 2025-10-25
+	 */
+	@Deprecated(since = "2.0")
 	public static PortalSettingsResponse toPortalSettings(final MessagingSettingEntity nullableSettingEntity) {
 		return ofNullable(nullableSettingEntity)
 			.map(settingEntity -> PortalSettingsResponse.builder()
