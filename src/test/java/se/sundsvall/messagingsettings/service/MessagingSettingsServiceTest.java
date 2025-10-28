@@ -3,7 +3,6 @@ package se.sundsvall.messagingsettings.service;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -32,7 +31,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
-import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
@@ -202,7 +200,6 @@ class MessagingSettingsServiceTest {
 		assertThat(result).hasSize(1);
 		assertThat(result.getFirst()).hasAllNullFieldsOrPropertiesExcept("values");
 		assertThat(result.getFirst().getValues()).isEmpty();
-
 		assertThat(specificationCaptor.getAllValues()).hasSize(2);
 		specificationCaptor.getAllValues().forEach(capture -> {
 			assertThat(capture).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(matchesDepartmentId("44")));
@@ -212,11 +209,10 @@ class MessagingSettingsServiceTest {
 	@Test
 	void fetchMessagingSettingsForUserWhenUserIsMissingDepartmentInfo() {
 		final var identifier = Identifier.parse(X_SENT_BY);
-		final var e = assertThrows(ThrowableProblem.class, () -> messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, identifier));
-
-		assertThat(e.getStatus()).isEqualTo(Status.NOT_FOUND);
-		assertThat(e.getMessage()).isEqualTo("Not Found: Could not determine organizational affiliation for user with login name 'testuser'.");
-		assertThat(e.getDetail()).isEqualTo("Could not determine organizational affiliation for user with login name 'testuser'.");
+		assertThatThrownBy(() -> messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, identifier))
+			.isInstanceOf(ThrowableProblem.class)
+			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
+			.hasMessage("Not Found: Could not determine organizational affiliation for user with login name 'testuser'.");
 
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
 	}
@@ -226,14 +222,14 @@ class MessagingSettingsServiceTest {
 		when(mockEmployeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME)).thenReturn(Optional.of(new DepartmentInfo(null, "44", null)));
 
 		final var identifier = Identifier.parse(X_SENT_BY);
-		final var e = assertThrows(ThrowableProblem.class, () -> messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, identifier));
+		assertThatThrownBy(() -> messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, identifier))
+			.isInstanceOf(ThrowableProblem.class)
+			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
+			.hasMessage("Not Found: Messaging settings not found for municipality with ID '2281' and department with ID '44'.");
 
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
 		verify(mockMessagingSettingRepository).count(specificationCaptor.capture());
 
-		assertThat(e.getStatus()).isEqualTo(Status.NOT_FOUND);
-		assertThat(e.getMessage()).isEqualTo("Not Found: Messaging settings not found for municipality with ID '2281' and department with ID '44'.");
-		assertThat(e.getDetail()).isEqualTo("Messaging settings not found for municipality with ID '2281' and department with ID '44'.");
 		assertThat(specificationCaptor.getValue()).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(matchesDepartmentId("44")));
 	}
 }

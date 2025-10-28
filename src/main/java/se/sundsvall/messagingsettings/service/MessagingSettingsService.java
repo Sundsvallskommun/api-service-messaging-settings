@@ -115,20 +115,16 @@ public class MessagingSettingsService {
 	 *                        organization
 	 */
 	public List<MessagingSettings> fetchMessagingSettingsForUser(final String municipalityId, final Identifier identifier) {
-		try {
-			final var departmentId = employeeIntegration.getDepartmentInfo(municipalityId, identifier.getValue())
-				.map(DepartmentInfo::id)
-				.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND.formatted(identifier.getValue())));
+		final var departmentId = employeeIntegration.getDepartmentInfo(municipalityId, identifier.getValue())
+			.map(DepartmentInfo::id)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND.formatted(identifier.getValue())));
 
-			if (messagingSettingRepository.count(matchesMunicipalityId(municipalityId).and(matchesDepartmentId(departmentId))) == 0) {
-				throw Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_MESSAGING_SETTINGS_NOT_FOUND.formatted(municipalityId, departmentId));
-			}
-
-			return messagingSettingRepository.findAll(matchesMunicipalityId(municipalityId).and(matchesDepartmentId(departmentId))).stream()
-				.map(EntityMapper::toMessagingSettings)
-				.toList();
-		} finally {
-			Identifier.remove();
+		if (messagingSettingRepository.count(matchesMunicipalityId(municipalityId).and(matchesDepartmentId(departmentId))) == 0) {
+			throw Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_MESSAGING_SETTINGS_NOT_FOUND.formatted(municipalityId, departmentId));
 		}
+
+		return messagingSettingRepository.findAll(matchesMunicipalityId(municipalityId).and(matchesDepartmentId(departmentId))).stream()
+			.map(EntityMapper::toMessagingSettings)
+			.toList();
 	}
 }
