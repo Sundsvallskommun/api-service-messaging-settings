@@ -4,45 +4,41 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
+import com.turkraft.springfilter.boot.Filter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
-import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
-import se.sundsvall.messagingsettings.api.model.PortalSettingsResponse;
-import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
+import se.sundsvall.dept44.support.Identifier;
+import se.sundsvall.messagingsettings.api.model.MessagingSettings;
+import se.sundsvall.messagingsettings.api.validation.ValidIdentifier;
+import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 
 @Tag(name = "Messaging Settings")
 @RestController
 @Validated
 @RequestMapping("/{municipalityId}")
-@ApiResponse(responseCode = "400",
-	description = "Bad Request",
-	content = @Content(
-		mediaType = APPLICATION_PROBLEM_JSON_VALUE,
-		schema = @Schema(oneOf = {
-			Problem.class, ConstraintViolationProblem.class,
-		})))
-@ApiResponse(responseCode = "500",
-	description = "Internal Server Error",
-	content = @Content(
-		mediaType = APPLICATION_PROBLEM_JSON_VALUE,
-		schema = @Schema(implementation = Problem.class)))
+@ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
+	Problem.class, ConstraintViolationProblem.class,
+})))
+@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 class MessagingSettingsResource {
 
 	private final MessagingSettingsService messagingSettingsService;
@@ -51,38 +47,29 @@ class MessagingSettingsResource {
 		this.messagingSettingsService = messagingSettingsService;
 	}
 
-	@GetMapping(path = "/sender-info", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get sender info", description = "Get sender info, optionally filtered by any combination of department id, department name and namespace.", responses = {
+	@GetMapping(produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get messaging settings", description = "Get all messaging settings or the ones that matches provided filter", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
 	})
-	ResponseEntity<List<SenderInfoResponse>> getSenderInfo(
+	ResponseEntity<List<MessagingSettings>> fetchMessagingSettings(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "departmentId", description = "Department ID", example = "28") @RequestParam(required = false) final String departmentId,
-		@Parameter(name = "departmentName", description = "Department name", example = "Sundsvalls kommun") @RequestParam(required = false) final String departmentName,
-		@Parameter(name = "namespace", description = "Namespace", example = "Namespace 1") @RequestParam(required = false) final String namespace) {
+		@Parameter(name = "filter",
+			description = "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)",
+			example = "created > '2022-09-08T12:00:00.000+02:00' and values.key: 'namespace' and values.value: 'NS1'",
+			schema = @Schema(implementation = String.class)) @Nullable @Filter final Specification<MessagingSettingEntity> filter) {
 
-		return ok(messagingSettingsService.getSenderInfo(municipalityId, departmentId, departmentName, namespace));
+		return ok(messagingSettingsService.fetchMessagingSettings(municipalityId, filter));
 	}
 
-	@GetMapping(path = "/{departmentId}/callback-email", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get callback email", description = "Get callback e-mail for given department and municipality.", responses = {
+	@GetMapping(path = "/user", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get messaging settings for organization connected to a user", description = "Get messaging settings for the organization connected to the provided user.", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
-	ResponseEntity<CallbackEmailResponse> getCallbackEmail(
-		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId,
-		@Parameter(name = "departmentId", description = "Department ID", example = "SKM") @PathVariable(name = "departmentId") @NotBlank final String departmentId) {
-		return ok(messagingSettingsService.getCallbackEmailByMunicipalityIdAndDepartmentId(municipalityId, departmentId));
-	}
-
-	@GetMapping(path = "/portal-settings", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get portal settings", description = "Get portal settings for given department.", responses = {
-		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	})
-	ResponseEntity<PortalSettingsResponse> getPortalSettings(
+	ResponseEntity<List<MessagingSettings>> getMessagingSettingsForUser(
+		@Parameter(name = Identifier.HEADER_NAME, description = "User identity", example = "joe01doe;type=adAccount") @RequestHeader(name = Identifier.HEADER_NAME) @NotNull @ValidIdentifier final String xSentBy,
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId) {
-		final var user = messagingSettingsService.getUser();
-		return ok(messagingSettingsService.getPortalSettings(municipalityId, user));
+
+		return ok(messagingSettingsService.fetchMessagingSettingsForUser(municipalityId, Identifier.get()));
 	}
 }

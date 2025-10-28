@@ -15,6 +15,10 @@ import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntit
 @Repository
 public interface MessagingSettingRepository extends JpaRepository<MessagingSettingEntity, String>, JpaSpecificationExecutor<MessagingSettingEntity> {
 
+	/**
+	 * @deprecated Deprecated since 2025-10-25
+	 */
+	@Deprecated(since = "2.0", forRemoval = true)
 	default List<MessagingSettingEntity> findAllBySpecification(final String municipalityId, final String departmentId, final String departmentName, final String namespace) {
 		return findAll(Specification
 			.allOf(matchesMunicipalityId(municipalityId)
@@ -22,5 +26,4 @@ public interface MessagingSettingRepository extends JpaRepository<MessagingSetti
 				.and(matchesDepartmentName(departmentName))
 				.and(matchesNamespace(namespace))));
 	}
-
 }

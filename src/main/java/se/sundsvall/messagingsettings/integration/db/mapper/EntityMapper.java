@@ -4,7 +4,10 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
 import java.util.List;
+import java.util.Objects;
 import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
+import se.sundsvall.messagingsettings.api.model.MessagingSettings;
+import se.sundsvall.messagingsettings.api.model.MessagingSettings.MessagingSettingValue;
 import se.sundsvall.messagingsettings.api.model.PortalSettingsResponse;
 import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
 import se.sundsvall.messagingsettings.enums.SnailMailMethod;
@@ -29,6 +32,10 @@ public class EntityMapper {
 
 	private EntityMapper() {}
 
+	/**
+	 * @deprecated Deprecated since 2025-10-25
+	 */
+	@Deprecated(since = "2.0")
 	public static SenderInfoResponse toSenderInfo(final MessagingSettingEntity nullableSettingEntity) {
 		return ofNullable(nullableSettingEntity)
 			.map(settingEntity -> SenderInfoResponse.builder()
@@ -44,6 +51,10 @@ public class EntityMapper {
 			.orElse(null);
 	}
 
+	/**
+	 * @deprecated Deprecated since 2025-10-25
+	 */
+	@Deprecated(since = "2.0")
 	public static CallbackEmailResponse toCallbackEmail(final MessagingSettingEntity nullableSettingEntity) {
 		return ofNullable(nullableSettingEntity)
 			.map(settingEntity -> CallbackEmailResponse.builder()
@@ -53,6 +64,10 @@ public class EntityMapper {
 			.orElse(null);
 	}
 
+	/**
+	 * @deprecated Deprecated since 2025-10-25
+	 */
+	@Deprecated(since = "2.0")
 	public static PortalSettingsResponse toPortalSettings(final MessagingSettingEntity nullableSettingEntity) {
 		return ofNullable(nullableSettingEntity)
 			.map(settingEntity -> PortalSettingsResponse.builder()
@@ -74,6 +89,35 @@ public class EntityMapper {
 				.map(MessagingSettingValueEmbeddable::getValue)
 				.findAny()
 				.orElse(null))
+			.orElse(null);
+	}
+
+	public static MessagingSettings toMessagingSettings(final MessagingSettingEntity nullableSettingEntity) {
+		return ofNullable(nullableSettingEntity)
+			.map(settingEntity -> MessagingSettings.builder()
+				.withId(settingEntity.getId())
+				.withMunicipalityId(settingEntity.getMunicipalityId())
+				.withValues(toMessagingSettingValues(settingEntity.getValues()))
+				.withCreated(settingEntity.getCreated())
+				.withUpdated(settingEntity.getUpdated())
+				.build())
+			.orElse(null);
+	}
+
+	private static List<MessagingSettingValue> toMessagingSettingValues(List<MessagingSettingValueEmbeddable> nullableSettingValueEmbeddables) {
+		return ofNullable(nullableSettingValueEmbeddables).orElse(emptyList()).stream()
+			.map(EntityMapper::toMessagingSettingValue)
+			.filter(Objects::nonNull)
+			.toList();
+	}
+
+	private static MessagingSettingValue toMessagingSettingValue(MessagingSettingValueEmbeddable nullableSettingValueEmbeddable) {
+		return ofNullable(nullableSettingValueEmbeddable)
+			.map(settingValueEmbeddable -> MessagingSettingValue.builder()
+				.withKey(settingValueEmbeddable.getKey())
+				.withType(settingValueEmbeddable.getType().name())
+				.withValue(settingValueEmbeddable.getValue())
+				.build())
 			.orElse(null);
 	}
 }

@@ -2,11 +2,16 @@ package se.sundsvall.messagingsettings.integration.db.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
+import se.sundsvall.messagingsettings.api.model.MessagingSettings;
 import se.sundsvall.messagingsettings.enums.SnailMailMethod;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingValueEmbeddable;
+import se.sundsvall.messagingsettings.integration.db.model.enums.ValueType;
 
 class EntityMapperTest {
 
@@ -133,5 +138,90 @@ class EntityMapperTest {
 			.withKey(key)
 			.withValue(value)
 			.build();
+	}
+
+	@Test
+	void toMessagingSettings() {
+		final var created = OffsetDateTime.now().minusMinutes(10);
+		final var id = "id";
+		final var municipalityId = "municipalityId";
+		final var updated = OffsetDateTime.now().plusMinutes(10);
+		final var key = "key";
+		final var type = ValueType.BOOLEAN;
+		final var value = "value";
+		final var entity = MessagingSettingEntity.builder()
+			.withCreated(created)
+			.withId(id)
+			.withMunicipalityId(municipalityId)
+			.withUpdated(updated)
+			.withValues(List.of(MessagingSettingValueEmbeddable.builder()
+				.withKey(key)
+				.withType(type)
+				.withValue(value)
+				.build()))
+			.build();
+
+		final var bean = EntityMapper.toMessagingSettings(entity);
+
+		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(bean.getCreated()).isEqualTo(created);
+		assertThat(bean.getId()).isEqualTo(id);
+		assertThat(bean.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(bean.getUpdated()).isEqualTo(updated);
+		assertThat(bean.getValues()).hasSize(1).satisfiesExactly(beanValue -> {
+			assertThat(beanValue.getKey()).isEqualTo(key);
+			assertThat(beanValue.getType()).isEqualTo(type.name());
+			assertThat(beanValue.getValue()).isEqualTo(value);
+		});
+	}
+
+	@Test
+	void toMessagingSettingsFromNull() {
+		assertThat(EntityMapper.toMessagingSettings(null)).isNull();
+	}
+
+	@Test
+	void toMessagingSettingsWithEmptySource() {
+		assertThat(EntityMapper.toMessagingSettings(MessagingSettingEntity.builder().build()))
+			.hasAllNullFieldsOrPropertiesExcept("values")
+			.extracting(MessagingSettings::getValues).asInstanceOf(InstanceOfAssertFactories.LIST).isEmpty();
+	}
+
+	@Test
+	void toMessagingSettingsWithNullInValueList() {
+		final var created = OffsetDateTime.now().minusMinutes(10);
+		final var id = "id";
+		final var municipalityId = "municipalityId";
+		final var updated = OffsetDateTime.now().plusMinutes(10);
+		final var key = "key";
+		final var type = ValueType.BOOLEAN;
+		final var value = "value";
+		final var values = new ArrayList<>(List.of(MessagingSettingValueEmbeddable.builder()
+			.withKey(key)
+			.withType(type)
+			.withValue(value)
+			.build()));
+		values.addFirst(null); // Add to verify removal of nulls
+
+		final var entity = MessagingSettingEntity.builder()
+			.withCreated(created)
+			.withId(id)
+			.withMunicipalityId(municipalityId)
+			.withUpdated(updated)
+			.withValues(values)
+			.build();
+
+		final var bean = EntityMapper.toMessagingSettings(entity);
+
+		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(bean.getCreated()).isEqualTo(created);
+		assertThat(bean.getId()).isEqualTo(id);
+		assertThat(bean.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(bean.getUpdated()).isEqualTo(updated);
+		assertThat(bean.getValues()).hasSize(1).satisfiesExactly(beanValue -> {
+			assertThat(beanValue.getKey()).isEqualTo(key);
+			assertThat(beanValue.getType()).isEqualTo(type.name());
+			assertThat(beanValue.getValue()).isEqualTo(value);
+		});
 	}
 }

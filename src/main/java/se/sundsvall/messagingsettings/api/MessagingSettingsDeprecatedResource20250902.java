@@ -45,18 +45,18 @@ import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 /**
  * Class containing old deprecated resources marked for removal
  */
-class MessagingSettingsDeprecatedResource {
+class MessagingSettingsDeprecatedResource20250902 {
 
 	private final MessagingSettingsService messagingSettingsService;
 
-	MessagingSettingsDeprecatedResource(final MessagingSettingsService messagingSettingsService) {
+	MessagingSettingsDeprecatedResource20250902(final MessagingSettingsService messagingSettingsService) {
 		this.messagingSettingsService = messagingSettingsService;
 	}
 
 	/**
-	 * @deprecated Deprecated since 2025-09-02. Use sender-info resource with request parameters instead
+	 * @deprecated Deprecated since 2025-09-02. Use sender-info resource with request parameters instead.
 	 */
-	@Deprecated(since = "2025-09-02", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	@GetMapping(path = "/{departmentId}/sender-info", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get sender info", description = "Get sender info for given department and municipality (the resource is deprecated, use /sender-info with parameters instead).", responses = {
 		@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
@@ -72,9 +72,9 @@ class MessagingSettingsDeprecatedResource {
 	}
 
 	/**
-	 * @deprecated Deprecated since 2025-09-02. Use sender-info resource with request parameters instead
+	 * @deprecated Deprecated since 2025-09-02. Use sender-info resource with request parameters instead.
 	 */
-	@Deprecated(since = "2025-09-02", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	@GetMapping(path = "/{namespace}/sender-infos", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get sender info", description = "Get sender information for a given municipality and namespace (the resource is deprecated, use /sender-info with parameters instead).")
 	@ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
@@ -85,9 +85,9 @@ class MessagingSettingsDeprecatedResource {
 	}
 
 	/**
-	 * @deprecated Deprecated since 2025-09-02. Use sender-info resource with request parameters instead
+	 * @deprecated Deprecated since 2025-09-02. Use sender-info resource with request parameters instead.
 	 */
-	@Deprecated(since = "2025-09-02", forRemoval = true)
+	@Deprecated(since = "2.0", forRemoval = true)
 	@GetMapping("/{namespace}/{departmentName}/sender-info")
 	@Operation(summary = "Get sender info", description = "Get sender information for a given municipality, namespace and department name (the resource is deprecated, use /sender-info with parameters instead).")
 	ResponseEntity<SenderInfoResponse> getSenderInfoByNamespaceAndDepartmentName(
@@ -100,5 +100,4 @@ class MessagingSettingsDeprecatedResource {
 			.findFirst()
 			.orElseThrow(() -> Problem.valueOf(Status.NOT_FOUND, "Sender info not found for municipality with ID '%s', namespace '%s' and department name '%s'.".formatted(municipalityId, namespace, departmentName))));
 	}
-	// END
 }
