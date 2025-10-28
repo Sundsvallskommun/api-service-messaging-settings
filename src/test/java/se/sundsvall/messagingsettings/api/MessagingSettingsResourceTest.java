@@ -1,6 +1,9 @@
 package se.sundsvall.messagingsettings.api;
 
 import static java.util.Optional.ofNullable;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -8,21 +11,24 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.messagingsettings.Application;
-import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
-import se.sundsvall.messagingsettings.api.model.PortalSettingsResponse;
-import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
-import se.sundsvall.messagingsettings.enums.SnailMailMethod;
+import se.sundsvall.messagingsettings.api.model.MessagingSettings;
+import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -30,96 +36,64 @@ import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 class MessagingSettingsResourceTest {
 
 	@MockitoBean
-	private MessagingSettingsService mockMessagingSettingsService;
+	private MessagingSettingsService messagingSettingsServiceMock;
+
+	@Captor
+	private ArgumentCaptor<Identifier> identifierCaptor;
 
 	@Autowired
 	private WebTestClient webTestClient;
 
-	private static Stream<Arguments> senderInfoParameterProvider() {
-		return Stream.of(
-			Arguments.of(null, null, null),
-			Arguments.of("departmentId", null, null),
-			Arguments.of(null, "departmentName", "namespace"),
-			Arguments.of(null, null, "namespace"));
+	@AfterEach
+	void verifyNoMoreMockInteractions() {
+		verifyNoMoreInteractions(messagingSettingsServiceMock);
 	}
 
 	@ParameterizedTest
-	@MethodSource("senderInfoParameterProvider")
-	void getSenderInfoReturnsOK(String departmentId, String departmentName, String namespace) {
+	@ValueSource(strings = {
+		"values.key: 'namespace' and values.value: 'NS1'"
+	})
+	@NullAndEmptySource
+	void fetchMessagingSettings(String filter) {
 		final var municipalityId = "2281";
-		final var senderInfoResponse = SenderInfoResponse.builder()
-			.withSupportText("supportText")
-			.withContactInformationUrl("contactInformationUrl")
-			.withContactInformationPhoneNumber("contactInformationPhoneNumber")
-			.withContactInformationEmail("contactInformationEmail")
-			.withOrganizationNumber("organizationNumber")
-			.withSmsSender("smsSender")
-			.build();
+		final var match = MessagingSettings.builder().build();
 
-		when(mockMessagingSettingsService.getSenderInfo(municipalityId, departmentId, departmentName, namespace)).thenReturn(List.of(senderInfoResponse));
+		when(messagingSettingsServiceMock.fetchMessagingSettings(eq(municipalityId), any())).thenReturn(List.of(match));
 
-		webTestClient.get()
-			.uri(uriBuilder -> {
-				final var builder = uriBuilder.path("/{municipalityId}/sender-info");
-				ofNullable(departmentId).ifPresent(v -> builder.queryParam("departmentId", v));
-				ofNullable(departmentName).ifPresent(v -> builder.queryParam("departmentName", v));
-				ofNullable(namespace).ifPresent(v -> builder.queryParam("namespace", v));
-				return builder.build(Map.of("municipalityId", municipalityId));
-			})
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}")
+				.queryParamIfPresent("filter", ofNullable(filter))
+				.build(Map.of("municipalityId", "2281")))
 			.exchange()
 			.expectStatus().isOk()
-			.expectBodyList(SenderInfoResponse.class)
-			.contains(senderInfoResponse);
+			.expectBodyList(MessagingSettings.class)
+			.returnResult().getResponseBody();
 
-		verify(mockMessagingSettingsService).getSenderInfo(municipalityId, departmentId, departmentName, namespace);
-		verifyNoMoreInteractions(mockMessagingSettingsService);
+		assertThat(response).hasSize(1).containsExactly(match);
+		verify(messagingSettingsServiceMock).fetchMessagingSettings(eq(municipalityId), ArgumentMatchers.<Specification<MessagingSettingEntity>>any());
 	}
 
 	@Test
-	void getCallbackEmail() {
+	void getMessagingSettingsForUser() {
 		final var municipalityId = "2281";
-		final var departmentId = "123";
-		final var callbackEmailResponse = CallbackEmailResponse.builder()
-			.withCallbackEmail("callbackEmail")
-			.withOrganizationNumber("organizationNumber")
-			.build();
+		final var match = MessagingSettings.builder().build();
 
-		when(mockMessagingSettingsService.getCallbackEmailByMunicipalityIdAndDepartmentId(municipalityId, departmentId)).thenReturn(callbackEmailResponse);
+		when(messagingSettingsServiceMock.fetchMessagingSettingsForUser(eq(municipalityId), any())).thenReturn(List.of(match));
 
-		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/{departmentId}/callback-email").build(Map.of("municipalityId", municipalityId, "departmentId", departmentId)))
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/user")
+				.build(Map.of("municipalityId", "2281")))
+			.header("x-sent-by", "joe01doe; type=adAccount")
 			.exchange()
 			.expectStatus().isOk()
-			.expectBody(CallbackEmailResponse.class)
-			.isEqualTo(callbackEmailResponse);
+			.expectBodyList(MessagingSettings.class)
+			.returnResult().getResponseBody();
 
-		verify(mockMessagingSettingsService).getCallbackEmailByMunicipalityIdAndDepartmentId(municipalityId, departmentId);
-		verifyNoMoreInteractions(mockMessagingSettingsService);
+		verify(messagingSettingsServiceMock).fetchMessagingSettingsForUser(eq(municipalityId), identifierCaptor.capture());
+
+		assertThat(response).hasSize(1).containsExactly(match);
+		assertThat(identifierCaptor.getValue().getValue()).isEqualTo("joe01doe");
+		assertThat(identifierCaptor.getValue().getType()).isEqualTo(Identifier.Type.AD_ACCOUNT);
 	}
 
-	@Test
-	void getPortalSettings() {
-		final var municipalityId = "2281";
-		final var loginName = "loginName";
-		final var portalSettingsResponse = PortalSettingsResponse.builder()
-			.withDepartmentName("departmentName")
-			.withMunicipalityId("municipalityId")
-			.withOrganizationNumber("organizationNumber")
-			.withSnailMailMethod(SnailMailMethod.SC_ADMIN)
-			.build();
-
-		when(mockMessagingSettingsService.getUser()).thenReturn(loginName);
-		when(mockMessagingSettingsService.getPortalSettings(municipalityId, loginName)).thenReturn(portalSettingsResponse);
-
-		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/portal-settings").build(Map.of("municipalityId", municipalityId)))
-			.exchange()
-			.expectStatus().isOk()
-			.expectBody(PortalSettingsResponse.class)
-			.isEqualTo(portalSettingsResponse);
-
-		verify(mockMessagingSettingsService).getUser();
-		verify(mockMessagingSettingsService).getPortalSettings(municipalityId, loginName);
-		verifyNoMoreInteractions(mockMessagingSettingsService);
-	}
 }

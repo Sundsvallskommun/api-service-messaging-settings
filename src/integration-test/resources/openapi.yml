@@ -5,11 +5,57 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "1.3"
+  version: "2.0"
 servers:
-- url: http://localhost:45249
+- url: http://localhost:8080
   description: Generated server url
 paths:
+  /{municipalityId}:
+    get:
+      tags:
+      - Messaging Settings
+      summary: Get messaging settings
+      description: Get all messaging settings or the ones that matches provided filter
+      operationId: fetchMessagingSettings
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: filter
+        in: query
+        description: "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)"
+        required: false
+        schema:
+          type: string
+        example: "created > '2022-09-08T12:00:00.000+02:00' and values.key: 'namespace'\
+          \ and values.value: 'NS1'"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MessagingSettings"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /{municipalityId}/{namespace}/{departmentName}/sender-info:
     get:
       tags:
@@ -215,6 +261,59 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+      deprecated: true
+  /{municipalityId}/user:
+    get:
+      tags:
+      - Messaging Settings
+      summary: Get messaging settings for organization connected to a user
+      description: Get messaging settings for the organization connected to the provided
+        user.
+      operationId: getMessagingSettingsForUser
+      parameters:
+      - name: X-Sent-By
+        in: header
+        description: User identity
+        required: true
+        schema:
+          type: string
+        example: joe01doe;type=adAccount
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MessagingSettings"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /{municipalityId}/sender-info:
     get:
       tags:
@@ -275,6 +374,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+      deprecated: true
   /{municipalityId}/portal-settings:
     get:
       tags:
@@ -317,6 +417,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+      deprecated: true
   /api-docs:
     get:
       tags:
@@ -338,10 +439,6 @@ components:
     Problem:
       type: object
       properties:
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -354,14 +451,18 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -402,8 +503,6 @@ components:
           type: string
         message:
           type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -411,6 +510,8 @@ components:
           type: object
           additionalProperties:
             type: object
+        detail:
+          type: string
         suppressed:
           type: array
           items:
@@ -473,10 +574,6 @@ components:
                 type: boolean
         message:
           type: string
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -489,6 +586,10 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
         suppressed:
           type: array
           items:
@@ -529,6 +630,59 @@ components:
           type: string
         message:
           type: string
+    MessagingSettingValue:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Identifier key for the value setting
+          readOnly: true
+          example: department_name
+        value:
+          type: string
+          description: Stored value for the value setting
+          readOnly: true
+          example: Department 44
+        type:
+          type: string
+          description: "Type of data for the stored value. Can be one of [STRING|NUMERIC|BOOLEAN]"
+          readOnly: true
+          example: STRING
+      description: Messaging setting value model
+    MessagingSettings:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id for the messaging setting instance
+          readOnly: true
+          example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
+        municipalityId:
+          type: string
+          description: Municipality id for municipality that the messaging setting
+            instance belongs to
+          readOnly: true
+          example: "2281"
+        created:
+          type: string
+          description: Timestamp when the instance was created
+          format: date-time
+          readOnly: true
+          example: 2025-10-24T15:30:00+02:00
+        updated:
+          type: string
+          description: Timestamp when the instance was last updated. Null if instance
+            has never been updated.
+          format: date-time
+          readOnly: true
+          example: 2025-10-25T16:30:00+02:00
+        values:
+          type: array
+          description: Values connected to the messaging setting instance
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/MessagingSettingValue"
+      description: Messaging settings response model
     SenderInfoResponse:
       type: object
       properties:
