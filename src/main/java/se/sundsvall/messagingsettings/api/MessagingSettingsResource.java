@@ -70,6 +70,6 @@ class MessagingSettingsResource {
 		@Parameter(name = Identifier.HEADER_NAME, description = "User identity", example = "joe01doe;type=adAccount") @RequestHeader(name = Identifier.HEADER_NAME) @NotNull @ValidIdentifier final String xSentBy,
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable(name = "municipalityId") final String municipalityId) {
 
-		return ok(messagingSettingsService.fetchMessagingSettingsForUser(municipalityId, Identifier.parse(xSentBy)));
+		return ok(messagingSettingsService.fetchMessagingSettingsForUser(municipalityId, Identifier.get()));
 	}
 }
