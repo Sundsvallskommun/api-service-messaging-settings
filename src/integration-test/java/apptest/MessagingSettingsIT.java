@@ -29,7 +29,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 	void test01_senderInfoByDeparmentId() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath("/2281/sender-info?departmentId=11")
+			.withServicePath("/2281/sender-info?departmentId=1")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
@@ -59,7 +59,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 	void test04_callbackEmail() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath("/2281/11/callback-email")
+			.withServicePath("/2281/2/callback-email")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
@@ -122,19 +122,74 @@ class MessagingSettingsIT extends AbstractAppTest {
 	void test10_senderInfoByNamespace() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath("/2281/sender-info?namespace=NS1")
+			.withServicePath("/2281/sender-info?namespace=NS2")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
 	}
 
 	@Test
-	void test12_senderInfoByNamespaceAndDepartmentName() {
+	void test11_senderInfoByNamespaceAndDepartmentName() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath("/2281/sender-info?namespace=NS1&departmentName=dept44")
+			.withServicePath("/2281/sender-info?namespace=NS2&departmentName=conversation")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
 	}
+
+	@Test
+	void test12_fetchMessagingSettingsWithNoFilters() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test13_fetchMessagingSettingsFilteredByNamespace() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281?filter=values.key:'namespace' and values.value:'NS2'")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test14_fetchMessagingSettingsFilteredByNamespaceAndDepartmentName() {
+		// the exists function in filter is needed when evaluating multiple expressions in valuesettings-list to create a sub
+		// query for each expression otherwise the expression will always return emtpy result as a key for example can not both
+		// be 'namespace' and 'department_name'
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281?filter=exists(values.key:'namespace' and values.value:'NS2') and exists(values.key:'department_name' and values.value:'paratransit')")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test15_fetchMessagingSettingsFilteredByDepartmentId() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281?filter=values.key:'department_id' and values.value:'3'")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test16_fetchUserMessagingSettings() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/user")
+			.withHeader(Identifier.HEADER_NAME, "joe01doe; type=adAccount")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
 }

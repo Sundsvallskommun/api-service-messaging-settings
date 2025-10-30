@@ -1,12 +1,12 @@
 [
 	{
-		"organizationNumber": "161234567890",
+		"organizationNumber": "160000000111",
 		"supportText": "Kontakta oss via e-post eller telefon",
-		"contactInformationUrl": "https://domain.tld/",
-		"contactInformationPhoneNumber": "101-22 11 40",
-		"contactInformationEmail": "no-reply@localhost.local",
-		"contactInformationEmailName": "dept44 Name",
-		"smsSender": "SENDER NAME",
-		"folderName": "FOLDER NAME"
+		"contactInformationUrl": "https://domain111.tld/",
+		"contactInformationPhoneNumber": "101-22 11 11",
+		"contactInformationEmail": "no-reply.1@localhost.local",
+		"contactInformationEmailName": "Dept 1 Name",
+		"smsSender": "dept1",
+		"folderName": "folder1"
 	}
 ]

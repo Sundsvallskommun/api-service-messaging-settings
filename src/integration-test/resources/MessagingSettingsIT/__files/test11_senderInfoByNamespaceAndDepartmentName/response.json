@@ -5,12 +5,5 @@
 		"contactInformationEmail": "no-reply.5@localhost.local",
 		"contactInformationEmailName": "NS2 Conversation Name",
 		"smsSender": "NS2 Conversation sms sender"
-	},
-	{
-		"supportText": "Kontakta oss via e-post eller telefon",
-		"contactInformationUrl": "https://domain666.tld/",
-		"contactInformationEmail": "no-reply.6@localhost.local",
-		"contactInformationEmailName": "NS2 Paratransit Name",
-		"smsSender": "NS2 Paratransit sms sender"
 	}
 ]

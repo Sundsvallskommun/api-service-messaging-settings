@@ -1,0 +1,386 @@
+[
+	{
+		"id": "475dcfd4-21d5-4f1d-9aac-fbf247f889b1",
+		"municipalityId": "2281",
+		"created": "2025-05-01T10:00:00Z",
+		"values": [
+			{
+				"key": "department_id",
+				"value": "1",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "department_name",
+				"value": "dept1",
+				"type": "STRING"
+			},
+			{
+				"key": "organization_number",
+				"value": "160000000111",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "snail_mail_method",
+				"value": "EMAIL",
+				"type": "STRING"
+			},
+			{
+				"key": "support_text",
+				"value": "Kontakta oss via e-post eller telefon",
+				"type": "STRING"
+			},
+			{
+				"key": "callback_email",
+				"value": "no-reply.1@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_url",
+				"value": "https://domain111.tld/",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_phone_number",
+				"value": "101-22 11 11",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email",
+				"value": "no-reply.1@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email_name",
+				"value": "Dept 1 Name",
+				"type": "STRING"
+			},
+			{
+				"key": "sms_sender",
+				"value": "dept1",
+				"type": "STRING"
+			},
+			{
+				"key": "folder_name",
+				"value": "folder1",
+				"type": "STRING"
+			},
+			{
+				"key": "rek_enabled",
+				"value": "false",
+				"type": "BOOLEAN"
+			},
+			{
+				"key": "sms_enabled",
+				"value": "true",
+				"type": "BOOLEAN"
+			}
+		]
+	},
+	{
+		"id": "475dcfd4-21d5-4f1d-9aac-fbf247f889b2",
+		"municipalityId": "2281",
+		"created": "2025-05-01T11:00:00Z",
+		"values": [
+			{
+				"key": "department_id",
+				"value": "2",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "department_name",
+				"value": "dept2",
+				"type": "STRING"
+			},
+			{
+				"key": "organization_number",
+				"value": "160000000222",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "snail_mail_method",
+				"value": "SC_ADMIN",
+				"type": "STRING"
+			},
+			{
+				"key": "support_text",
+				"value": "Kontakta oss via e-post eller telefon",
+				"type": "STRING"
+			},
+			{
+				"key": "callback_email",
+				"value": "no-reply.2@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_url",
+				"value": "https://domain222.tld/",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_phone_number",
+				"value": "101-22 11 22",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email",
+				"value": "no-reply.2@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email_name",
+				"value": "Dept 2 Name",
+				"type": "STRING"
+			},
+			{
+				"key": "sms_sender",
+				"value": "dept2",
+				"type": "STRING"
+			},
+			{
+				"key": "folder_name",
+				"value": "folder2",
+				"type": "STRING"
+			},
+			{
+				"key": "rek_enabled",
+				"value": "true",
+				"type": "BOOLEAN"
+			},
+			{
+				"key": "sms_enabled",
+				"value": "false",
+				"type": "BOOLEAN"
+			}
+		]
+	},
+	{
+		"id": "475dcfd4-21d5-4f1d-9aac-fbf247f889b3",
+		"municipalityId": "2281",
+		"created": "2025-05-01T12:00:00Z",
+		"updated": "2025-05-01T13:00:00Z",
+		"values": [
+			{
+				"key": "department_id",
+				"value": "3",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "department_name",
+				"value": "dept3",
+				"type": "STRING"
+			},
+			{
+				"key": "organization_number",
+				"value": "160000000333",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "snail_mail_method",
+				"value": "SC_ADMIN",
+				"type": "STRING"
+			},
+			{
+				"key": "support_text",
+				"value": "Kontakta oss via e-post eller telefon",
+				"type": "STRING"
+			},
+			{
+				"key": "callback_email",
+				"value": "no-reply.3@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_url",
+				"value": "https://domain333.tld/",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_phone_number",
+				"value": "101-22 11 33",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email",
+				"value": "no-reply.3@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email_name",
+				"value": "Dept 3 Name",
+				"type": "STRING"
+			},
+			{
+				"key": "sms_sender",
+				"value": "dept3",
+				"type": "STRING"
+			},
+			{
+				"key": "folder_name",
+				"value": "folder3",
+				"type": "STRING"
+			},
+			{
+				"key": "rek_enabled",
+				"value": "true",
+				"type": "BOOLEAN"
+			},
+			{
+				"key": "sms_enabled",
+				"value": "true",
+				"type": "BOOLEAN"
+			}
+		]
+	},
+	{
+		"id": "475dcfd4-21d5-4f1d-9aac-fbf247f889b6",
+		"municipalityId": "2281",
+		"created": "2025-05-01T14:00:00Z",
+		"values": [
+			{
+				"key": "callback_email",
+				"value": "no-reply.4@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email",
+				"value": "no-reply.4@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email_name",
+				"value": "NS1 Conversation Name",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_url",
+				"value": "https://domain444.tld/",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_type",
+				"value": "CONVERSATION",
+				"type": "STRING"
+			},
+			{
+				"key": "namespace",
+				"value": "NS1",
+				"type": "STRING"
+			},
+			{
+				"key": "sms_sender",
+				"value": "NS1 sms sender",
+				"type": "STRING"
+			},
+			{
+				"key": "support_text",
+				"value": "Kontakta oss via e-post eller telefon",
+				"type": "STRING"
+			}
+		]
+	},
+	{
+		"id": "475dcfd4-21d5-4f1d-9aac-fbf247f889b7",
+		"municipalityId": "2281",
+		"created": "2025-05-01T14:00:00Z",
+		"values": [
+			{
+				"key": "callback_email",
+				"value": "no-reply.5@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email",
+				"value": "no-reply.5@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email_name",
+				"value": "NS2 Conversation Name",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_url",
+				"value": "https://domain555.tld/",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_type",
+				"value": "CONVERSATION",
+				"type": "STRING"
+			},
+			{
+				"key": "department_name",
+				"value": "CONVERSATION",
+				"type": "STRING"
+			},
+			{
+				"key": "namespace",
+				"value": "NS2",
+				"type": "STRING"
+			},
+			{
+				"key": "sms_sender",
+				"value": "NS2 Conversation sms sender",
+				"type": "STRING"
+			},
+			{
+				"key": "support_text",
+				"value": "Kontakta oss via e-post eller telefon",
+				"type": "STRING"
+			}
+		]
+	},
+	{
+		"id": "475dcfd4-21d5-4f1d-9aac-fbf247f889b8",
+		"municipalityId": "2281",
+		"created": "2025-05-01T15:00:00Z",
+		"updated": "2025-05-01T16:00:00Z",
+		"values": [
+			{
+				"key": "callback_email",
+				"value": "no-reply.6@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email",
+				"value": "no-reply.6@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email_name",
+				"value": "NS2 Paratransit Name",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_url",
+				"value": "https://domain666.tld/",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_type",
+				"value": "PARATRANSIT",
+				"type": "STRING"
+			},
+			{
+				"key": "department_name",
+				"value": "PARATRANSIT",
+				"type": "STRING"
+			},
+			{
+				"key": "namespace",
+				"value": "NS2",
+				"type": "STRING"
+			},
+			{
+				"key": "sms_sender",
+				"value": "NS2 Paratransit sms sender",
+				"type": "STRING"
+			},
+			{
+				"key": "support_text",
+				"value": "Kontakta oss via e-post eller telefon",
+				"type": "STRING"
+			}
+		]
+	}
+]
