@@ -14,9 +14,9 @@
 	"mailNickname": null,
 	"company": null,
 	"companyId": null,
-	"orgTree": "1|2281|SK¤2|3|Dept 3 Name¤3|33|Sub dept 33 Name",
+	"orgTree": "1|2281|SK¤2|2|Dept 2 Name¤3|22|Sub dept 22 Name",
 	"referenceNumber": null,
 	"isManager": null,
-	"loginName": "TestUser",
+	"loginName": "joe01doe",
 	"fullOrgTree": null
 }

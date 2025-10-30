@@ -1,0 +1,80 @@
+[
+	{
+		"id": "475dcfd4-21d5-4f1d-9aac-fbf247f889b3",
+		"municipalityId": "2281",
+		"created": "2025-05-01T12:00:00Z",
+		"updated": "2025-05-01T13:00:00Z",
+		"values": [
+			{
+				"key": "department_id",
+				"value": "3",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "department_name",
+				"value": "dept3",
+				"type": "STRING"
+			},
+			{
+				"key": "organization_number",
+				"value": "160000000333",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "snail_mail_method",
+				"value": "SC_ADMIN",
+				"type": "STRING"
+			},
+			{
+				"key": "support_text",
+				"value": "Kontakta oss via e-post eller telefon",
+				"type": "STRING"
+			},
+			{
+				"key": "callback_email",
+				"value": "no-reply.3@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_url",
+				"value": "https://domain333.tld/",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_phone_number",
+				"value": "101-22 11 33",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email",
+				"value": "no-reply.3@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email_name",
+				"value": "Dept 3 Name",
+				"type": "STRING"
+			},
+			{
+				"key": "sms_sender",
+				"value": "dept3",
+				"type": "STRING"
+			},
+			{
+				"key": "folder_name",
+				"value": "folder3",
+				"type": "STRING"
+			},
+			{
+				"key": "rek_enabled",
+				"value": "true",
+				"type": "BOOLEAN"
+			},
+			{
+				"key": "sms_enabled",
+				"value": "true",
+				"type": "BOOLEAN"
+			}
+		]
+	}
+]
