@@ -14,27 +14,27 @@ import lombok.NoArgsConstructor;
 @Schema(description = "SenderInfo response")
 public class SenderInfoResponse {
 
-	@Schema(description = "Organization number of the organization connected to the information", example = "162021005489")
+	@Schema(description = "Organization number of the organization connected to the information", examples = "162021005489")
 	private String organizationNumber;
 
-	@Schema(description = "Descriptive support text", example = "Kontakta oss via epost eller telefon")
+	@Schema(description = "Descriptive support text", examples = "Kontakta oss via epost eller telefon")
 	private String supportText;
 
-	@Schema(description = "Contact information URL", example = "https://sundsvall.se/")
+	@Schema(description = "Contact information URL", examples = "https://sundsvall.se/")
 	private String contactInformationUrl;
 
-	@Schema(description = "Contact information phone number", example = "060-19 10 00")
+	@Schema(description = "Contact information phone number", examples = "060-19 10 00")
 	private String contactInformationPhoneNumber;
 
-	@Schema(description = "Contact information e-mail address", example = "sundsvalls.kommun@sundsvall.se")
+	@Schema(description = "Contact information e-mail address", examples = "sundsvalls.kommun@sundsvall.se")
 	private String contactInformationEmail;
 
-	@Schema(description = "Name of contact information e-mail sender", example = "Sundsvalls kommun")
+	@Schema(description = "Name of contact information e-mail sender", examples = "Sundsvalls kommun")
 	private String contactInformationEmailName;
 
-	@Schema(description = "Name of SMS sender", example = "Sundsvall")
+	@Schema(description = "Name of SMS sender", examples = "Sundsvall")
 	private String smsSender;
 
-	@Schema(description = "Folder name", example = "Foo")
+	@Schema(description = "Folder name", examples = "Foo")
 	private String folderName;
 }
