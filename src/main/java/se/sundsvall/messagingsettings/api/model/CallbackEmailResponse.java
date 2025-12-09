@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @Schema(description = "CallbackEmail response")
 public class CallbackEmailResponse {
 
-	@Schema(description = "Organization number of the organization connected to the information", example = "162021005489")
+	@Schema(description = "Organization number of the organization connected to the information", examples = "162021005489")
 	private String organizationNumber;
 
-	@Schema(description = "Callback e-mail address", example = "no-reply@domain.tld")
+	@Schema(description = "Callback e-mail address", examples = "no-reply@domain.tld")
 	private String callbackEmail;
 }
