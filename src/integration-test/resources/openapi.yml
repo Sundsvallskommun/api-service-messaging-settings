@@ -1,13 +1,13 @@
 openapi: 3.1.0
 info:
   title: api-service-messaging-settings
-  contact: {}
+  contact: { }
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "2.0"
 servers:
-  - url: http://localhost:61199
+  - url: http://localhost:63463
     description: Generated server url
 paths:
   /{municipalityId}:
@@ -439,12 +439,12 @@ components:
     Problem:
       type: object
       properties:
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -453,7 +453,7 @@ components:
           format: uri
         parameters:
           type: object
-          additionalProperties: {}
+          additionalProperties: { }
     StatusType:
       type: object
       properties:
@@ -509,7 +509,7 @@ components:
           format: uri
         parameters:
           type: object
-          additionalProperties: {}
+          additionalProperties: { }
         suppressed:
           type: array
           items:
@@ -546,7 +546,7 @@ components:
     ThrowableProblem:
       type: object
       properties:
-        cause: {}
+        cause: { }
         stackTrace:
           type: array
           items:
@@ -571,12 +571,12 @@ components:
                 type: boolean
         message:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -585,7 +585,7 @@ components:
           format: uri
         parameters:
           type: object
-          additionalProperties: {}
+          additionalProperties: { }
         suppressed:
           type: array
           items:
@@ -633,17 +633,20 @@ components:
         key:
           type: string
           description: Identifier key for the value setting
-          example: department_name
+          examples:
+            - department_name
           readOnly: true
         value:
           type: string
           description: Stored value for the value setting
-          example: Department 44
+          examples:
+            - Department 44
           readOnly: true
         type:
           type: string
           description: "Type of data for the stored value. Can be one of [STRING|NUMERIC|BOOLEAN]"
-          example: STRING
+          examples:
+            - STRING
           readOnly: true
     MessagingSettings:
       type: object
@@ -652,26 +655,30 @@ components:
         id:
           type: string
           description: Id for the messaging setting instance
-          example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
+          examples:
+            - c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
           readOnly: true
         municipalityId:
           type: string
           description: Municipality id for municipality that the messaging setting
             instance belongs to
-          example: 2281
+          examples:
+            - "2281"
           readOnly: true
         created:
           type: string
           format: date-time
           description: Timestamp when the instance was created
-          example: 2025-10-24T15:30:00+02:00
+          examples:
+            - 2025-10-24T15:30:00+02:00
           readOnly: true
         updated:
           type: string
           format: date-time
           description: Timestamp when the instance was last updated. Null if instance
             has never been updated.
-          example: 2025-10-25T16:30:00+02:00
+          examples:
+            - 2025-10-25T16:30:00+02:00
           readOnly: true
         values:
           type: array
@@ -773,4 +780,4 @@ components:
           description: Indicates if rek is enabled for the given department
           examples:
             - "true"
-  securitySchemes: {}
+  securitySchemes: { }
