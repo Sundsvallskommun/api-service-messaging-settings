@@ -44,7 +44,7 @@ class ValidIdentifierConstraintValidatorTest {
 	void nullValue() {
 		final var valid = validator.isValid(null, context);
 
-		assertThat(valid).isTrue(); // Null value is be restricted by @notNull annotation
+		assertThat(valid).isTrue(); // Null value is restricted by @notNull annotation
 	}
 
 	@ParameterizedTest

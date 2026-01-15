@@ -1,11 +1,7 @@
 package se.sundsvall.messagingsettings.service;
 
-import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toCallbackEmail;
 import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toEntity;
-import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toPortalSettings;
 import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.updateEntity;
 import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesDepartmentId;
 import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesMunicipalityId;
@@ -16,11 +12,8 @@ import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.dept44.support.Identifier;
-import se.sundsvall.messagingsettings.api.model.CallbackEmailResponse;
 import se.sundsvall.messagingsettings.api.model.MessagingSettings;
 import se.sundsvall.messagingsettings.api.model.MessagingSettingsRequest;
-import se.sundsvall.messagingsettings.api.model.PortalSettingsResponse;
-import se.sundsvall.messagingsettings.api.model.SenderInfoResponse;
 import se.sundsvall.messagingsettings.integration.db.MessagingSettingRepository;
 import se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
@@ -30,14 +23,9 @@ import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 @Service
 public class MessagingSettingsService {
 
-	static final String ERROR_MESSAGE_SENDER_INFO_NOT_FOUND = "Sender info not found for municipality with ID '%s' and department with ID '%s'.";
-	static final String ERROR_MESSAGE_SENDER_INFO_NOT_FOUND_BY_NAMESPACE = "Sender info not found for municipality with ID '%s', namespace '%s' and department name '%s'.";
-	static final String ERROR_MESSAGE_CALLBACK_EMAIL_NOT_FOUND = "Callback e-mail not found for municipality with ID '%s' and department with ID '%s'.";
-	static final String ERROR_MESSAGE_PORTAL_SETTINGS_NOT_FOUND = "Portal settings not found for municipality with ID '%s' and department with ID '%s'.";
 	static final String ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND = "Could not determine organizational affiliation for user with login name '%s'.";
 	static final String ERROR_MESSAGE_MESSAGING_SETTINGS_NOT_FOUND = "Messaging settings not found for municipality with ID '%s' and department with ID '%s'.";
 	static final String ERROR_MESSAGE_MESSAGING_SETTING_NOT_FOUND_BY_ID = "Messaging setting not found for municipality with ID '%s' and ID '%s'.";
-	static final String ERROR_MESSAGE_USER_IDENTIFIER_NOT_FOUND = "User identifier not found.";
 
 	private final MessagingSettingRepository messagingSettingRepository;
 	private final EmployeeIntegration employeeIntegration;
@@ -46,53 +34,6 @@ public class MessagingSettingsService {
 		final EmployeeIntegration employeeIntegration) {
 		this.messagingSettingRepository = messagingSettingRepository;
 		this.employeeIntegration = employeeIntegration;
-	}
-
-	/**
-	 * @deprecated Deprecated since 2025-10-25
-	 */
-	@Deprecated(since = "2.0", forRemoval = true)
-	public List<SenderInfoResponse> getSenderInfo(final String municipalityId, final String departmentId, final String departmentName, final String namespace) {
-		return messagingSettingRepository.findAllBySpecification(municipalityId, departmentId, departmentName, namespace).stream()
-			.map(EntityMapper::toSenderInfo)
-			.toList();
-	}
-
-	/**
-	 * @deprecated Deprecated since 2025-10-25
-	 */
-	@Deprecated(since = "2.0", forRemoval = true)
-	public CallbackEmailResponse getCallbackEmailByMunicipalityIdAndDepartmentId(final String municipalityId, final String departmentId) {
-		final var settings = messagingSettingRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
-			.findFirst()
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_CALLBACK_EMAIL_NOT_FOUND.formatted(municipalityId, departmentId)));
-		return toCallbackEmail(settings);
-	}
-
-	/**
-	 * @deprecated Deprecated since 2025-10-25
-	 */
-	@Deprecated(since = "2.0", forRemoval = true)
-	public PortalSettingsResponse getPortalSettings(final String municipalityId, final String loginName) {
-		final var departmentId = employeeIntegration.getDepartmentInfo(municipalityId, loginName)
-			.map(DepartmentInfo::id)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND.formatted(loginName)));
-
-		final var settings = messagingSettingRepository.findAllBySpecification(municipalityId, departmentId, null, null).stream()
-			.findFirst()
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_PORTAL_SETTINGS_NOT_FOUND.formatted(municipalityId, departmentId)));
-
-		return toPortalSettings(settings);
-	}
-
-	/**
-	 * @deprecated Deprecated since 2025-10-25
-	 */
-	@Deprecated(since = "2.0", forRemoval = true)
-	public String getUser() {
-		return ofNullable(Identifier.get())
-			.map(Identifier::getValue)
-			.orElseThrow(() -> Problem.valueOf(BAD_REQUEST, ERROR_MESSAGE_USER_IDENTIFIER_NOT_FOUND));
 	}
 
 	/**
@@ -137,7 +78,7 @@ public class MessagingSettingsService {
 	 * Create a new messaging setting
 	 *
 	 * @param  municipalityId id of municipality
-	 * @param  request        the create request
+	 * @param  request        the object requested to create the setting
 	 * @return                the created MessagingSettings
 	 */
 	public MessagingSettings createMessagingSetting(final String municipalityId, final MessagingSettingsRequest request) {

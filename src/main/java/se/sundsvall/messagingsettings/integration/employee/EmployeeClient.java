@@ -25,7 +25,7 @@ public interface EmployeeClient {
 	 */
 	@GetMapping(path = "/{municipalityId}/portalpersondata/{domain}/{loginname}", produces = APPLICATION_JSON_VALUE)
 	Optional<PortalPersonData> getEmployeeByDomainAndLoginName(
-		@PathVariable("municipalityId") String municipalityId,
-		@PathVariable("domain") String domain,
-		@PathVariable("loginname") String loginname);
+		@PathVariable String municipalityId,
+		@PathVariable String domain,
+		@PathVariable String loginname);
 }

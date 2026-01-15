@@ -6,13 +6,13 @@
 			}
 		},
 		"method": "GET",
-		"url": "/employee/2281/portalpersondata/PERSONAL/TestUser"
+		"url": "/employee/2281/portalpersondata/PERSONAL/joe01doe"
 	},
 	"response": {
 		"status": 200,
 		"headers": {
 			"Content-Type": "application/json"
 		},
-		"bodyFileName": "test07_portalSettings/responses/employee.json"
+		"bodyFileName": "test05_fetchUserMessagingSettings/responses/employee.json"
 	}
 }
