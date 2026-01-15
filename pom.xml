@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-messaging-settings</artifactId>
-	<version>2.0</version>
+	<version>3.0</version>
 	<name>api-service-messaging-settings</name>
 	<properties>
 		<spring-filter.version>3.2.5</spring-filter.version>
