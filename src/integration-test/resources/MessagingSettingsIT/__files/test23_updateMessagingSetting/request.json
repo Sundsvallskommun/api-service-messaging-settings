@@ -1,0 +1,14 @@
+{
+	"values": [
+		{
+			"key": "department_name",
+			"value": "IT Department Updated",
+			"type": "STRING"
+		},
+		{
+			"key": "callback_email",
+			"value": "it-updated@example.com",
+			"type": "STRING"
+		}
+	]
+}

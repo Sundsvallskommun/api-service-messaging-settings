@@ -1,0 +1,9 @@
+{
+	"values": [
+		{
+			"key": "test_key",
+			"value": "test_value",
+			"type": "STRING"
+		}
+	]
+}

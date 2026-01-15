@@ -1,0 +1,11 @@
+{
+	"title": "Constraint Violation",
+	"status": 400,
+	"type": "https://zalando.github.io/problem/constraint-violation",
+	"violations": [
+		{
+			"field": "getMessagingSettingById.id",
+			"message": "not a valid UUID"
+		}
+	]
+}
