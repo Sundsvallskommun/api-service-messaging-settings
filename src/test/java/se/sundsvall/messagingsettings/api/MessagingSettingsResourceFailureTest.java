@@ -46,6 +46,7 @@ class MessagingSettingsResourceFailureTest {
 			.expectBody(ConstraintViolationProblem.class)
 			.returnResult().getResponseBody();
 
+		assertThat(response).isNotNull();
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getViolations()).hasSize(1)
@@ -69,6 +70,7 @@ class MessagingSettingsResourceFailureTest {
 			.expectBody(ConstraintViolationProblem.class)
 			.returnResult().getResponseBody();
 
+		assertThat(response).isNotNull();
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getViolations()).hasSize(1)
@@ -92,6 +94,7 @@ class MessagingSettingsResourceFailureTest {
 			.expectBody(ConstraintViolationProblem.class)
 			.returnResult().getResponseBody();
 
+		assertThat(response).isNotNull();
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getViolations()).hasSize(1)
@@ -114,6 +117,7 @@ class MessagingSettingsResourceFailureTest {
 			.expectBody(Problem.class)
 			.returnResult().getResponseBody();
 
+		assertThat(response).isNotNull();
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getDetail()).isEqualTo("Required request header 'X-Sent-By' for method parameter type String is not present");

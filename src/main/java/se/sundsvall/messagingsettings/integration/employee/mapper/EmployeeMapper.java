@@ -5,20 +5,20 @@ import static org.apache.commons.lang3.math.NumberUtils.toInt;
 
 import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 
-public class EmployeeMapper {
+public final class EmployeeMapper {
 
 	private static final String ORGANIZATION_DELIMITER = "¤";
 	private static final String INFORMATION_DELIMITER = "\\|";
 
 	private EmployeeMapper() {}
 
-	public static DepartmentInfo toDepartmentInfo(String organizationsString) {
+	public static DepartmentInfo toDepartmentInfo(final String organizationsString) {
 		return ofNullable(organizationsString)
 			.map(EmployeeMapper::parseOrganisationString)
 			.orElse(null);
 	}
 
-	private static DepartmentInfo parseOrganisationString(String organizationsString) {
+	private static DepartmentInfo parseOrganisationString(final String organizationsString) {
 		final var organizations = organizationsString.split(ORGANIZATION_DELIMITER);
 
 		for (final String organization : organizations) {

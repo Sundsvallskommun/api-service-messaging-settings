@@ -26,7 +26,7 @@ class EmployeeIntegrationTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
 	private static final String DOMAIN_PERSONAL = "PERSONAL";
-	private static final String LOGIN_NAME = "bobfromhr";
+	private static final String LOGIN_NAME = "someValue";
 
 	@Mock
 	private EmployeeClient mockEmployeeClient;
@@ -42,14 +42,14 @@ class EmployeeIntegrationTest {
 
 	@ParameterizedTest
 	@MethodSource("argumentProvider")
-	void getDepartmentInfo(String orgTree, DepartmentInfo expectedDepartmentInfo) {
+	void getDepartmentInfo(final String orgTree, final DepartmentInfo expectedDepartmentInfo) {
 		final var portalPersonData = new PortalPersonData();
 		portalPersonData.setOrgTree(orgTree);
 
 		when(mockEmployeeClient.getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME))
 			.thenReturn(Optional.of(portalPersonData));
 
-		try (MockedStatic<EmployeeMapper> employeeMapperMock = Mockito.mockStatic(EmployeeMapper.class)) {
+		try (final MockedStatic<EmployeeMapper> employeeMapperMock = Mockito.mockStatic(EmployeeMapper.class)) {
 			employeeMapperMock.when(() -> EmployeeMapper.toDepartmentInfo(orgTree))
 				.thenReturn(expectedDepartmentInfo);
 

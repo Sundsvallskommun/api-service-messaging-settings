@@ -36,16 +36,18 @@ public class MessagingSettingValueEmbeddable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof final MessagingSettingValueEmbeddable other)) { return false; }
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof final MessagingSettingValueEmbeddable other)) {
+			return false;
+		}
 		return Objects.equals(key, other.key) && type == other.type && Objects.equals(value, other.value);
 	}
 
 	@Override
 	public String toString() {
-		final var builder = new StringBuilder();
-		builder.append("MessagingSettingValueEmbeddable [key=").append(key).append(", value=").append(value).append(", type=").append(type).append("]");
-		return builder.toString();
+		return "MessagingSettingValueEmbeddable [key=" + key + ", value=" + value + ", type=" + type + "]";
 	}
 }

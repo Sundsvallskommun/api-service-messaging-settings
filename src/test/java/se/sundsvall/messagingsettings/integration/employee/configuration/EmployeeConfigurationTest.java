@@ -48,12 +48,12 @@ class EmployeeConfigurationTest {
 		when(propertiesMock.readTimeout()).thenReturn(2);
 		when(feignMultiCustomizerSpy.composeCustomizersToOne()).thenReturn(feignBuilderCustomizerMock);
 
-		try (MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
+		try (final MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
 			feignMultiCustomizerMock.when(FeignMultiCustomizer::create).thenReturn(feignMultiCustomizerSpy);
 
-			var customizer = configuration.feignBuilderCustomizer(propertiesMock, clientRegistrationRepositoryMock);
+			final var customizer = configuration.feignBuilderCustomizer(propertiesMock, clientRegistrationRepositoryMock);
 
-			ArgumentCaptor<ProblemErrorDecoder> errorDecoderCaptor = ArgumentCaptor.forClass(ProblemErrorDecoder.class);
+			final ArgumentCaptor<ProblemErrorDecoder> errorDecoderCaptor = ArgumentCaptor.forClass(ProblemErrorDecoder.class);
 
 			verify(feignMultiCustomizerSpy).withErrorDecoder(errorDecoderCaptor.capture());
 			verify(clientRegistrationRepositoryMock).findByRegistrationId(CLIENT_ID);

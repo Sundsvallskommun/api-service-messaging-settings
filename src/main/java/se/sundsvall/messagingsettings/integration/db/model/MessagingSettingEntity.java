@@ -74,16 +74,18 @@ public class MessagingSettingEntity {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof final MessagingSettingEntity other)) { return false; }
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof final MessagingSettingEntity other)) {
+			return false;
+		}
 		return Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(municipalityId, other.municipalityId) && Objects.equals(updated, other.updated) && Objects.equals(values, other.values);
 	}
 
 	@Override
 	public String toString() {
-		final var builder = new StringBuilder();
-		builder.append("MessagingSettingEntity [id=").append(id).append(", municipalityId=").append(municipalityId).append(", created=").append(created).append(", updated=").append(updated).append(", values=").append(values).append("]");
-		return builder.toString();
+		return "MessagingSettingEntity [id=" + id + ", municipalityId=" + municipalityId + ", created=" + created + ", updated=" + updated + ", values=" + values + "]";
 	}
 }
