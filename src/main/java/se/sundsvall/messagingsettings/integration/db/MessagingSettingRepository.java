@@ -6,6 +6,7 @@ import static se.sundsvall.messagingsettings.integration.db.specification.Messag
 import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesNamespace;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -14,6 +15,15 @@ import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntit
 
 @Repository
 public interface MessagingSettingRepository extends JpaRepository<MessagingSettingEntity, String>, JpaSpecificationExecutor<MessagingSettingEntity> {
+
+	/**
+	 * Find a messaging setting by ID and municipality ID
+	 *
+	 * @param  id             the messaging setting ID
+	 * @param  municipalityId the municipality ID
+	 * @return                an Optional containing the entity if found
+	 */
+	Optional<MessagingSettingEntity> findByIdAndMunicipalityId(String id, String municipalityId);
 
 	/**
 	 * @deprecated Deprecated since 2025-10-25

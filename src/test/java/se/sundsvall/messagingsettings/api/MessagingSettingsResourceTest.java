@@ -8,7 +8,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -21,14 +23,13 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.messagingsettings.Application;
 import se.sundsvall.messagingsettings.api.model.MessagingSettings;
-import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
+import se.sundsvall.messagingsettings.api.model.MessagingSettingsRequest;
 import se.sundsvall.messagingsettings.service.MessagingSettingsService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -54,7 +55,7 @@ class MessagingSettingsResourceTest {
 		"values.key: 'namespace' and values.value: 'NS1'"
 	})
 	@NullAndEmptySource
-	void fetchMessagingSettings(String filter) {
+	void fetchMessagingSettings(final String filter) {
 		final var municipalityId = "2281";
 		final var match = MessagingSettings.builder().build();
 
@@ -70,7 +71,7 @@ class MessagingSettingsResourceTest {
 			.returnResult().getResponseBody();
 
 		assertThat(response).hasSize(1).containsExactly(match);
-		verify(messagingSettingsServiceMock).fetchMessagingSettings(eq(municipalityId), ArgumentMatchers.<Specification<MessagingSettingEntity>>any());
+		verify(messagingSettingsServiceMock).fetchMessagingSettings(eq(municipalityId), ArgumentMatchers.any());
 	}
 
 	@Test
@@ -94,6 +95,162 @@ class MessagingSettingsResourceTest {
 		assertThat(response).hasSize(1).containsExactly(match);
 		assertThat(identifierCaptor.getValue().getValue()).isEqualTo("joe01doe");
 		assertThat(identifierCaptor.getValue().getType()).isEqualTo(Identifier.Type.AD_ACCOUNT);
+	}
+
+	@Test
+	void createMessagingSetting() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var id = "b82bd8ac-1507-4d9a-958d-369261eecc15";
+		final var request = MessagingSettingsRequest.builder()
+			.withValues(List.of(
+				MessagingSettingsRequest.MessagingSettingValueRequest.builder()
+					.withKey("department_name")
+					.withValue("IT Department")
+					.withType("STRING")
+					.build()))
+			.build();
+
+		final var createdSetting = MessagingSettings.builder()
+			.withId(id)
+			.withMunicipalityId(municipalityId)
+			.withCreated(OffsetDateTime.now())
+			.withValues(List.of(
+				MessagingSettings.MessagingSettingValue.builder()
+					.withKey("department_name")
+					.withValue("IT Department")
+					.withType("STRING")
+					.build()))
+			.build();
+
+		when(messagingSettingsServiceMock.createMessagingSetting(eq(municipalityId), any(MessagingSettingsRequest.class)))
+			.thenReturn(createdSetting);
+
+		// Act & Assert
+		webTestClient.post()
+			.uri("/{municipalityId}", municipalityId)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(request)
+			.exchange()
+			.expectStatus().isCreated()
+			.expectHeader().value("Location", location -> assertThat(location).endsWith("/" + municipalityId + "/" + id));
+
+		verify(messagingSettingsServiceMock).createMessagingSetting(eq(municipalityId), any(MessagingSettingsRequest.class));
+	}
+
+	@Test
+	void getMessagingSettingById() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var id = "b82bd8ac-1507-4d9a-958d-369261eecc15";
+		final var setting = MessagingSettings.builder()
+			.withId(id)
+			.withMunicipalityId(municipalityId)
+			.withCreated(OffsetDateTime.now())
+			.withValues(List.of(
+				MessagingSettings.MessagingSettingValue.builder()
+					.withKey("department_name")
+					.withValue("IT Department")
+					.withType("STRING")
+					.build()))
+			.build();
+
+		when(messagingSettingsServiceMock.getMessagingSettingById(municipalityId, id))
+			.thenReturn(setting);
+
+		// Act & Assert
+		final var response = webTestClient.get()
+			.uri("/{municipalityId}/{id}", municipalityId, id)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody(MessagingSettings.class)
+			.returnResult().getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getId()).isEqualTo(id);
+		assertThat(response.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(response.getValues()).hasSize(1);
+
+		verify(messagingSettingsServiceMock).getMessagingSettingById(municipalityId, id);
+	}
+
+	@Test
+	void updateMessagingSetting() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var id = "b82bd8ac-1507-4d9a-958d-369261eecc15";
+		final var request = MessagingSettingsRequest.builder()
+			.withValues(List.of(
+				MessagingSettingsRequest.MessagingSettingValueRequest.builder()
+					.withKey("department_name")
+					.withValue("Updated Department")
+					.withType("STRING")
+					.build()))
+			.build();
+
+		final var updatedSetting = MessagingSettings.builder()
+			.withId(id)
+			.withMunicipalityId(municipalityId)
+			.withCreated(OffsetDateTime.now().minusDays(1))
+			.withUpdated(OffsetDateTime.now())
+			.withValues(List.of(
+				MessagingSettings.MessagingSettingValue.builder()
+					.withKey("department_name")
+					.withValue("Updated Department")
+					.withType("STRING")
+					.build()))
+			.build();
+
+		when(messagingSettingsServiceMock.updateMessagingSetting(eq(municipalityId), eq(id), any(MessagingSettingsRequest.class)))
+			.thenReturn(updatedSetting);
+
+		// Act & Assert
+		final var response = webTestClient.patch()
+			.uri("/{municipalityId}/{id}", municipalityId, id)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(request)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody(MessagingSettings.class)
+			.returnResult().getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getId()).isEqualTo(id);
+		assertThat(response.getUpdated()).isNotNull();
+		assertThat(response.getValues().getFirst().getValue()).isEqualTo("Updated Department");
+
+		verify(messagingSettingsServiceMock).updateMessagingSetting(eq(municipalityId), eq(id), any(MessagingSettingsRequest.class));
+	}
+
+	@Test
+	void deleteMessagingSetting() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var id = "b82bd8ac-1507-4d9a-958d-369261eecc15";
+
+		// Act & Assert
+		webTestClient.delete()
+			.uri("/{municipalityId}/{id}", municipalityId, id)
+			.exchange()
+			.expectStatus().isNoContent();
+
+		verify(messagingSettingsServiceMock).deleteMessagingSetting(municipalityId, id);
+	}
+
+	@Test
+	void deleteMessagingSettingKey() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var id = "b82bd8ac-1507-4d9a-958d-369261eecc15";
+		final var key = "department_name";
+
+		// Act & Assert
+		webTestClient.delete()
+			.uri("/{municipalityId}/{id}/key/{key}", municipalityId, id, key)
+			.exchange()
+			.expectStatus().isNoContent();
+
+		verify(messagingSettingsServiceMock).deleteMessagingSettingKey(municipalityId, id, key);
 	}
 
 }
