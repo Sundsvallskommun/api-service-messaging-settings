@@ -1,0 +1,5 @@
+{
+	"title": "Not Found",
+	"status": 404,
+	"detail": "Key 'non_existent_key' not found in messaging setting with ID '475dcfd4-21d5-4f1d-9aac-fbf247f889b7' for municipality '2281'."
+}

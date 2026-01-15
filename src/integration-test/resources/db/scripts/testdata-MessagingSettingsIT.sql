@@ -8,7 +8,7 @@ values ('475dcfd4-21d5-4f1d-9aac-fbf247f889b1', '2281', '2025-05-01 10:00:00.000
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b8', '2281', '2025-05-01 15:00:00.000000', '2025-05-01 16:00:00.000000'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b9', '2262', '2025-05-01 16:00:00.000000', null);
 
-insert into messaging_setting_value (messaging_setting_id, `key`, `value`, `type`) 
+insert into messaging_setting_value (messaging_setting_id, `key`, `value`, `type`)
 values ('475dcfd4-21d5-4f1d-9aac-fbf247f889b1', 'department_id', '1', 'NUMERIC'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b1', 'department_name', 'dept1', 'STRING'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b1', 'organization_number', '160000000111', 'NUMERIC'),
@@ -38,7 +38,7 @@ values ('475dcfd4-21d5-4f1d-9aac-fbf247f889b1', 'department_id', '1', 'NUMERIC')
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b2', 'folder_name', 'folder2', 'STRING'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b2', 'rek_enabled', 'true', 'BOOLEAN'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b2', 'sms_enabled', 'false', 'BOOLEAN'),
-       
+
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b3', 'department_id', '3', 'NUMERIC'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b3', 'department_name', 'dept3', 'STRING'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b3', 'organization_number', '160000000333', 'NUMERIC'),
@@ -55,7 +55,7 @@ values ('475dcfd4-21d5-4f1d-9aac-fbf247f889b1', 'department_id', '1', 'NUMERIC')
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b3', 'sms_enabled', 'true', 'BOOLEAN'),
 
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b4', 'random_key', 'random value', 'STRING'),
-       
+
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b6', 'contact_type', 'CONVERSATION', 'STRING'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b6', 'callback_email', 'no-reply.4@localhost.local', 'STRING'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b6', 'support_text', 'Kontakta oss via e-post eller telefon', 'STRING'),
@@ -84,5 +84,5 @@ values ('475dcfd4-21d5-4f1d-9aac-fbf247f889b1', 'department_id', '1', 'NUMERIC')
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b8', 'contact_information_email_name', 'NS2 Paratransit Name', 'STRING'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b8', 'sms_sender', 'NS2 Paratransit sms sender', 'STRING'),
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b8', 'namespace', 'NS2', 'STRING'),
-       
+
        ('475dcfd4-21d5-4f1d-9aac-fbf247f889b9', 'another_random_key', 'true', 'BOOLEAN');

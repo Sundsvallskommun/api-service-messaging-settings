@@ -1,0 +1,22 @@
+{
+	"id": "${json-unit.any-string}",
+	"municipalityId": "2281",
+	"created": "${json-unit.any-string}",
+	"values": [
+		{
+			"key": "department_name",
+			"value": "Sales Department",
+			"type": "STRING"
+		},
+		{
+			"key": "callback_email",
+			"value": "sales@example.com",
+			"type": "STRING"
+		},
+		{
+			"key": "sms_enabled",
+			"value": "true",
+			"type": "BOOLEAN"
+		}
+	]
+}

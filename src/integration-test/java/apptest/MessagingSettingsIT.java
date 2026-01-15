@@ -1,14 +1,18 @@
 package apptest;
 
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
 import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
@@ -189,6 +193,168 @@ class MessagingSettingsIT extends AbstractAppTest {
 			.withHeader(Identifier.HEADER_NAME, "joe01doe; type=adAccount")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test17_createMessagingSetting() {
+		setupCall()
+			.withHttpMethod(POST)
+			.withServicePath("/2281")
+			.withRequest("request.json")
+			.withExpectedResponseStatus(CREATED)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test18_createMessagingSettingWithInvalidMunicipalityId() {
+		setupCall()
+			.withHttpMethod(POST)
+			.withServicePath("/INVALID_MUNICIPALITY")
+			.withRequest("request.json")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test19_getMessagingSettingById() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/475dcfd4-21d5-4f1d-9aac-fbf247f889b1")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test20_getMessagingSettingByIdNotFound() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/550e8400-e29b-41d4-a716-446655440099")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test21_getMessagingSettingByIdWrongMunicipality() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/9999/475dcfd4-21d5-4f1d-9aac-fbf247f889b1")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test22_getMessagingSettingByIdInvalidUuid() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/not-a-uuid")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test23_updateMessagingSetting() {
+		setupCall()
+			.withHttpMethod(PATCH)
+			.withServicePath("/2281/475dcfd4-21d5-4f1d-9aac-fbf247f889b2")
+			.withRequest("request.json")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test24_updateMessagingSettingNotFound() {
+		setupCall()
+			.withHttpMethod(PATCH)
+			.withServicePath("/2281/550e8400-e29b-41d4-a716-446655440099")
+			.withRequest("request.json")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test25_updateMessagingSettingInvalidUuid() {
+		setupCall()
+			.withHttpMethod(PATCH)
+			.withServicePath("/2281/not-a-uuid")
+			.withRequest("request.json")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test26_deleteMessagingSetting() {
+		setupCall()
+			.withHttpMethod(DELETE)
+			.withServicePath("/2281/475dcfd4-21d5-4f1d-9aac-fbf247f889b3")
+			.withExpectedResponseStatus(NO_CONTENT)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test27_deleteMessagingSettingNotFound() {
+		setupCall()
+			.withHttpMethod(DELETE)
+			.withServicePath("/2281/550e8400-e29b-41d4-a716-446655440099")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test28_deleteMessagingSettingInvalidUuid() {
+		setupCall()
+			.withHttpMethod(DELETE)
+			.withServicePath("/2281/not-a-uuid")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test29_deleteMessagingSettingKey() {
+		setupCall()
+			.withHttpMethod(DELETE)
+			.withServicePath("/2281/475dcfd4-21d5-4f1d-9aac-fbf247f889b6/key/sms_sender")
+			.withExpectedResponseStatus(NO_CONTENT)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test30_deleteMessagingSettingKeyNotFound() {
+		setupCall()
+			.withHttpMethod(DELETE)
+			.withServicePath("/2281/475dcfd4-21d5-4f1d-9aac-fbf247f889b7/key/non_existent_key")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test31_deleteMessagingSettingKeyEntityNotFound() {
+		setupCall()
+			.withHttpMethod(DELETE)
+			.withServicePath("/2281/550e8400-e29b-41d4-a716-446655440099/key/some_key")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test32_deleteMessagingSettingKeyInvalidUuid() {
+		setupCall()
+			.withHttpMethod(DELETE)
+			.withServicePath("/2281/not-a-uuid/key/some_key")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(BAD_REQUEST)
 			.sendRequestAndVerifyResponse();
 	}
 
