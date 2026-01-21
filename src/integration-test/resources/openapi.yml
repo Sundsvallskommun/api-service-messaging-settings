@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "3.0"
 servers:
-  - url: http://localhost:61492
+  - url: http://localhost:50427
     description: Generated server url
 paths:
   /{municipalityId}:
@@ -254,6 +254,14 @@ paths:
         user.
       operationId: getMessagingSettingsForUser
       parameters:
+        - name: filter
+          in: query
+          description: "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)"
+          required: false
+          schema:
+            type: string
+          example: "created > '2022-09-08T12:00:00.000+02:00' and values.key: 'namespace'\
+          \ and values.value: 'NS1'"
         - name: X-Sent-By
           in: header
           description: User identity
