@@ -19,7 +19,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -71,7 +70,7 @@ class MessagingSettingsResourceTest {
 			.returnResult().getResponseBody();
 
 		assertThat(response).hasSize(1).containsExactly(match);
-		verify(messagingSettingsServiceMock).fetchMessagingSettings(eq(municipalityId), ArgumentMatchers.any());
+		verify(messagingSettingsServiceMock).fetchMessagingSettings(eq(municipalityId), any());
 	}
 
 	@Test
@@ -79,7 +78,7 @@ class MessagingSettingsResourceTest {
 		final var municipalityId = "2281";
 		final var match = MessagingSettings.builder().build();
 
-		when(messagingSettingsServiceMock.fetchMessagingSettingsForUser(eq(municipalityId), any())).thenReturn(List.of(match));
+		when(messagingSettingsServiceMock.fetchMessagingSettingsForUser(eq(municipalityId), any(), any())).thenReturn(List.of(match));
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/{municipalityId}/user")
@@ -90,7 +89,7 @@ class MessagingSettingsResourceTest {
 			.expectBodyList(MessagingSettings.class)
 			.returnResult().getResponseBody();
 
-		verify(messagingSettingsServiceMock).fetchMessagingSettingsForUser(eq(municipalityId), identifierCaptor.capture());
+		verify(messagingSettingsServiceMock).fetchMessagingSettingsForUser(eq(municipalityId), identifierCaptor.capture(), any());
 
 		assertThat(response).hasSize(1).containsExactly(match);
 		assertThat(identifierCaptor.getValue().getValue()).isEqualTo("joe01doe");

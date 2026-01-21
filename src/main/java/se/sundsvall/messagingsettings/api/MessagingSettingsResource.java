@@ -79,10 +79,14 @@ class MessagingSettingsResource {
 		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<List<MessagingSettings>> getMessagingSettingsForUser(
+		@Parameter(name = "filter",
+			description = "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)",
+			example = "created > '2022-09-08T12:00:00.000+02:00' and values.key: 'namespace' and values.value: 'NS1'",
+			schema = @Schema(implementation = String.class)) @Nullable @Filter final Specification<MessagingSettingEntity> filter,
 		@Parameter(name = Identifier.HEADER_NAME, description = "User identity", example = "joe01doe;type=adAccount") @RequestHeader(name = Identifier.HEADER_NAME) @NotNull @ValidIdentifier final String xSentBy,
 		@PathVariable @Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId final String municipalityId) {
 
-		return ok(messagingSettingsService.fetchMessagingSettingsForUser(municipalityId, Identifier.get()));
+		return ok(messagingSettingsService.fetchMessagingSettingsForUser(municipalityId, Identifier.get(), filter));
 	}
 
 	@PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_PROBLEM_JSON_VALUE)

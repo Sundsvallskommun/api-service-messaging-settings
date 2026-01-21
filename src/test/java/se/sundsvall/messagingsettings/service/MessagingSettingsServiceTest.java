@@ -80,11 +80,14 @@ class MessagingSettingsServiceTest {
 
 	@Test
 	void fetchMessagingSettingsForUser() {
+
+		final Specification<MessagingSettingEntity> filter = filterSpecificationConverterSpy.convert("values.key: 'namespace' and values.value: 'NAMESPACE'");
+
 		when(mockEmployeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME)).thenReturn(Optional.of(new DepartmentInfo(null, "44", null)));
 		when(mockMessagingSettingRepository.count(ArgumentMatchers.<Specification<MessagingSettingEntity>>any())).thenReturn(1L);
 		when(mockMessagingSettingRepository.findAll(ArgumentMatchers.<Specification<MessagingSettingEntity>>any())).thenReturn(List.of(MessagingSettingEntity.builder().build()));
 
-		final var result = messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, Identifier.parse(X_SENT_BY));
+		final var result = messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, Identifier.parse(X_SENT_BY), filter);
 
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
 		verify(mockMessagingSettingRepository).count(specificationCaptor.capture());
@@ -95,13 +98,16 @@ class MessagingSettingsServiceTest {
 		assertThat(result.getFirst()).hasAllNullFieldsOrPropertiesExcept("values");
 		assertThat(result.getFirst().getValues()).isEmpty();
 		assertThat(specificationCaptor.getAllValues()).hasSize(2);
-		specificationCaptor.getAllValues().forEach(capture -> assertThat(capture).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(matchesDepartmentId("44"))));
+		specificationCaptor.getAllValues().forEach(capture -> assertThat(capture).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(filter).and(matchesDepartmentId("44"))));
 	}
 
 	@Test
 	void fetchMessagingSettingsForUserWhenUserIsMissingDepartmentInfo() {
+
+		final Specification<MessagingSettingEntity> filter = filterSpecificationConverterSpy.convert("values.key: 'namespace' and values.value: 'NAMESPACE'");
+
 		final var identifier = Identifier.parse(X_SENT_BY);
-		assertThatThrownBy(() -> messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, identifier))
+		assertThatThrownBy(() -> messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, identifier, filter))
 			.isInstanceOf(ThrowableProblem.class)
 			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
 			.hasMessage("Not Found: Could not determine organizational affiliation for user with login name 'testUser'.");
@@ -111,10 +117,13 @@ class MessagingSettingsServiceTest {
 
 	@Test
 	void fetchMessagingSettingsForUserWhenDepartmentIsMissingSettings() {
+
+		final Specification<MessagingSettingEntity> filter = filterSpecificationConverterSpy.convert("values.key: 'namespace' and values.value: 'NAMESPACE'");
+
 		when(mockEmployeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME)).thenReturn(Optional.of(new DepartmentInfo(null, "44", null)));
 
 		final var identifier = Identifier.parse(X_SENT_BY);
-		assertThatThrownBy(() -> messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, identifier))
+		assertThatThrownBy(() -> messagingSettingsService.fetchMessagingSettingsForUser(MUNICIPALITY_ID, identifier, filter))
 			.isInstanceOf(ThrowableProblem.class)
 			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
 			.hasMessage("Not Found: Messaging settings not found for municipality with ID '2281' and department with ID '44'.");
@@ -122,7 +131,7 @@ class MessagingSettingsServiceTest {
 		verify(mockEmployeeIntegration).getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
 		verify(mockMessagingSettingRepository).count(specificationCaptor.capture());
 
-		assertThat(specificationCaptor.getValue()).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(matchesDepartmentId("44")));
+		assertThat(specificationCaptor.getValue()).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(filter).and(matchesDepartmentId("44")));
 	}
 
 	@Test

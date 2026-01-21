@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.BOOLEAN;
 import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.NUMERIC;
 import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.STRING;
+import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.WEB;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,7 @@ class ValueTypeTest {
 
 	@Test
 	void enums() {
-		assertThat(ValueType.values()).containsExactlyInAnyOrder(BOOLEAN, NUMERIC, STRING);
+		assertThat(ValueType.values()).containsExactlyInAnyOrder(BOOLEAN, NUMERIC, STRING, WEB);
 	}
 
 	@Test

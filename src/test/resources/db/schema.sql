@@ -1,3 +1,4 @@
+
     create table messaging_setting (
         municipality_id varchar(5) not null,
         created datetime(6),
@@ -6,12 +7,12 @@
         primary key (id)
     ) engine=InnoDB;
 
-	create table messaging_setting_value (
-	    messaging_setting_id varchar(36) not null,
-	    `key` varchar(255) not null,
-	    `value` text not null,
-	    `type` enum ('BOOLEAN','NUMERIC','STRING') not null
-	) engine=InnoDB;
+    create table messaging_setting_value (
+        messaging_setting_id varchar(36) not null,
+        `key` varchar(255) not null,
+        `value` text not null,
+        `type` enum ('BOOLEAN','NUMERIC','STRING','WEB') not null
+    ) engine=InnoDB;
 
     create index idx_messaging_setting_municipality_id 
        on messaging_setting (municipality_id);

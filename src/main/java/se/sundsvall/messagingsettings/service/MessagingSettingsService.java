@@ -60,16 +60,16 @@ public class MessagingSettingsService {
 	 * @throws ThrowableProblem if no organization could be affiliated to the provider user, or if no settings were found
 	 *                          for the organization
 	 */
-	public List<MessagingSettings> fetchMessagingSettingsForUser(final String municipalityId, final Identifier identifier) {
+	public List<MessagingSettings> fetchMessagingSettingsForUser(final String municipalityId, final Identifier identifier, final Specification<MessagingSettingEntity> filter) {
 		final var departmentId = employeeIntegration.getDepartmentInfo(municipalityId, identifier.getValue())
 			.map(DepartmentInfo::id)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND.formatted(identifier.getValue())));
 
-		if (messagingSettingRepository.count(matchesMunicipalityId(municipalityId).and(matchesDepartmentId(departmentId))) == 0) {
+		if (messagingSettingRepository.count(matchesMunicipalityId(municipalityId).and(filter).and(matchesDepartmentId(departmentId))) == 0) {
 			throw Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_MESSAGING_SETTINGS_NOT_FOUND.formatted(municipalityId, departmentId));
 		}
 
-		return messagingSettingRepository.findAll(matchesMunicipalityId(municipalityId).and(matchesDepartmentId(departmentId))).stream()
+		return messagingSettingRepository.findAll(matchesMunicipalityId(municipalityId).and(filter).and(matchesDepartmentId(departmentId))).stream()
 			.map(EntityMapper::toMessagingSettings)
 			.toList();
 	}
