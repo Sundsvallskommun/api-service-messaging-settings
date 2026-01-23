@@ -61,9 +61,9 @@ public class MessagingSettingsService {
 	 */
 	public List<MessagingSettings> fetchMessagingSettingsForUser(final String municipalityId, final Identifier identifier, final Specification<MessagingSettingEntity> filter) {
 
-		var departmentInfos = employeeIntegration.getDepartmentInfos(municipalityId, identifier.getValue());
-		for (var department : departmentInfos) {
-			var settings = findSettingsForDepartment(municipalityId, department.id(), filter);
+		final var departmentInfos = employeeIntegration.getDepartmentInfos(municipalityId, identifier.getValue());
+		for (final var department : departmentInfos) {
+			final var settings = findSettingsForDepartment(municipalityId, department.id(), filter);
 
 			if (!settings.isEmpty()) {
 				return settings;
@@ -153,7 +153,7 @@ public class MessagingSettingsService {
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_MESSAGING_SETTING_NOT_FOUND_BY_ID.formatted(municipalityId, id)));
 
 		final var values = entity.getValues();
-		final var removed = values.removeIf(value1 -> key.equals(value1.getKey()));
+		final var removed = values.removeIf(value -> key.equals(value.getKey()));
 
 		if (!removed) {
 			throw Problem.valueOf(NOT_FOUND, "Key '%s' not found in messaging setting with ID '%s' for municipality '%s'.".formatted(key, id, municipalityId));
