@@ -1,0 +1,18 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer 0000000000000000AAAAAAAAAAAAAAAA"
+			}
+		},
+		"method": "GET",
+		"url": "/employee/2281/portalpersondata/PERSONAL/fallback01user"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "test22_fetchUserMessagingSettings_withFallbackToOrganizationLevel/responses/employee.json"
+	}
+}

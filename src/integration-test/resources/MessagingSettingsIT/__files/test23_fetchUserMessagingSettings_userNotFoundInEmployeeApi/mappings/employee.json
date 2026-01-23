@@ -1,0 +1,17 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer 0000000000000000AAAAAAAAAAAAAAAA"
+			}
+		},
+		"method": "GET",
+		"url": "/employee/2281/portalpersondata/PERSONAL/unknown99user"
+	},
+	"response": {
+		"status": 404,
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	}
+}

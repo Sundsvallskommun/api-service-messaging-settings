@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import generated.se.sundsvall.employee.PortalPersonData;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -36,43 +37,49 @@ class EmployeeIntegrationTest {
 
 	private static Stream<Arguments> argumentProvider() {
 		return Stream.of(
-			Arguments.of("1|123|org1¤2|456|dept1", new DepartmentInfo("2", "456", "dept1")),
-			Arguments.of("1¤2|789|dept2", new DepartmentInfo("2", "789", "dept2")));
+			// Two levels, complete data
+			Arguments.of("1|123|org1¤2|456|dept1", List.of(new DepartmentInfo("2", "456", "dept1"), new DepartmentInfo("1", "123", "org1"))),
+			// Two levels, incomplete first level (filtered out)
+			Arguments.of("1¤2|789|dept2", List.of(new DepartmentInfo("2", "789", "dept2"))),
+			// Three levels - only the first two returned, reversed
+			Arguments.of("1|111|org1¤2|222|dept1¤3|333|subdept1", List.of(new DepartmentInfo("2", "222", "dept1"), new DepartmentInfo("1", "111", "org1"))),
+			// Single level
+			Arguments.of("1|123|org1", List.of(new DepartmentInfo("1", "123", "org1"))));
 	}
 
 	@ParameterizedTest
 	@MethodSource("argumentProvider")
-	void getDepartmentInfo(final String orgTree, final DepartmentInfo expectedDepartmentInfo) {
+	void getDepartmentInfos(final String orgTree, final List<DepartmentInfo> expectedDepartmentInfos) {
 		final var portalPersonData = new PortalPersonData();
-		portalPersonData.setOrgTree(orgTree);
+		portalPersonData.setFullOrgTree(orgTree);
 
 		when(mockEmployeeClient.getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME))
 			.thenReturn(Optional.of(portalPersonData));
 
 		try (final MockedStatic<EmployeeMapper> employeeMapperMock = Mockito.mockStatic(EmployeeMapper.class)) {
-			employeeMapperMock.when(() -> EmployeeMapper.toDepartmentInfo(orgTree))
-				.thenReturn(expectedDepartmentInfo);
+			employeeMapperMock.when(() -> EmployeeMapper.toDepartmentInfos(orgTree))
+				.thenReturn(expectedDepartmentInfos);
 
-			final var result = employeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
+			final var result = employeeIntegration.getDepartmentInfos(MUNICIPALITY_ID, LOGIN_NAME);
 
-			assertThat(result).isPresent();
-			assertThat(result).contains(expectedDepartmentInfo);
+			assertThat(result).isNotEmpty();
+			assertThat(result).isEqualTo(expectedDepartmentInfos);
 
 			verify(mockEmployeeClient).getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME);
 			verifyNoMoreInteractions(mockEmployeeClient);
-			employeeMapperMock.verify(() -> EmployeeMapper.toDepartmentInfo(orgTree));
+			employeeMapperMock.verify(() -> EmployeeMapper.toDepartmentInfos(orgTree));
 			employeeMapperMock.verifyNoMoreInteractions();
 		}
 	}
 
 	@Test
-	void getDepartmentInfo_withEmptyOrgTree() {
+	void getDepartmentInfos_withEmptyOrgTree() {
 		final var portalPersonData = new PortalPersonData();
 
 		when(mockEmployeeClient.getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME))
 			.thenReturn(Optional.of(portalPersonData));
 
-		final var result = employeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
+		final var result = employeeIntegration.getDepartmentInfos(MUNICIPALITY_ID, LOGIN_NAME);
 
 		assertThat(result).isEmpty();
 
@@ -81,28 +88,11 @@ class EmployeeIntegrationTest {
 	}
 
 	@Test
-	void getDepartmentInfo_withNoDepartments() {
-		final var portalPersonData = new PortalPersonData();
-
-		portalPersonData.setOrgTree("1|123|org1");
-
-		when(mockEmployeeClient.getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME))
-			.thenReturn(Optional.of(portalPersonData));
-
-		final var result = employeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
-
-		assertThat(result).isEmpty();
-
-		verify(mockEmployeeClient).getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME);
-		verifyNoMoreInteractions(mockEmployeeClient);
-	}
-
-	@Test
-	void getDepartmentInfo_withNoEmployee() {
+	void getDepartmentInfos_withNoEmployee() {
 		when(mockEmployeeClient.getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME))
 			.thenReturn(Optional.empty());
 
-		final var result = employeeIntegration.getDepartmentInfo(MUNICIPALITY_ID, LOGIN_NAME);
+		final var result = employeeIntegration.getDepartmentInfos(MUNICIPALITY_ID, LOGIN_NAME);
 
 		assertThat(result).isEmpty();
 

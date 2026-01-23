@@ -13,6 +13,7 @@ import static org.springframework.http.HttpStatus.OK;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.messagingsettings.Application;
@@ -26,6 +27,7 @@ import se.sundsvall.messagingsettings.Application;
 class MessagingSettingsIT extends AbstractAppTest {
 
 	private static final String RESPONSE_FILE = "response.json";
+	private static final String REQUEST_FILE = "request.json";
 
 	@Test
 	void test01_fetchMessagingSettingsWithNoFilters() {
@@ -49,7 +51,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 
 	@Test
 	void test03_fetchMessagingSettingsFilteredByNamespaceAndDepartmentName() {
-		// the exists function in filter is needed when evaluating multiple expressions in value-settings-list to create a sub
+		// The exists function in filter is needed when evaluating multiple expressions in the value-settings-list to create a sub
 		// query for each expression, otherwise the expression will always return an empty result as a key. For example, cannot both
 		// be 'namespace' and 'department_name'
 		setupCall()
@@ -75,7 +77,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 		setupCall()
 			.withHttpMethod(GET)
 			.withServicePath("/2281/user")
-			.withHeader("X-Sent-By", "joe01doe; type=adAccount")
+			.withHeader(Identifier.HEADER_NAME, "joe01doe; type=adAccount")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
@@ -86,7 +88,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 		setupCall()
 			.withHttpMethod(POST)
 			.withServicePath("/2281")
-			.withRequest("request.json")
+			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
 			.sendRequestAndVerifyResponse();
 	}
@@ -96,7 +98,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 		setupCall()
 			.withHttpMethod(POST)
 			.withServicePath("/INVALID_MUNICIPALITY")
-			.withRequest("request.json")
+			.withRequest(REQUEST_FILE)
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(BAD_REQUEST)
 			.sendRequestAndVerifyResponse();
@@ -147,7 +149,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 		setupCall()
 			.withHttpMethod(PATCH)
 			.withServicePath("/2281/475dcfd4-21d5-4f1d-9aac-fbf247f889b2")
-			.withRequest("request.json")
+			.withRequest(REQUEST_FILE)
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(OK)
 			.sendRequestAndVerifyResponse();
@@ -158,7 +160,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 		setupCall()
 			.withHttpMethod(PATCH)
 			.withServicePath("/2281/550e8400-e29b-41d4-a716-446655440099")
-			.withRequest("request.json")
+			.withRequest(REQUEST_FILE)
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(NOT_FOUND)
 			.sendRequestAndVerifyResponse();
@@ -169,7 +171,7 @@ class MessagingSettingsIT extends AbstractAppTest {
 		setupCall()
 			.withHttpMethod(PATCH)
 			.withServicePath("/2281/not-a-uuid")
-			.withRequest("request.json")
+			.withRequest(REQUEST_FILE)
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(BAD_REQUEST)
 			.sendRequestAndVerifyResponse();
@@ -240,6 +242,61 @@ class MessagingSettingsIT extends AbstractAppTest {
 			.withServicePath("/2281/not-a-uuid/key/some_key")
 			.withExpectedResponse(RESPONSE_FILE)
 			.withExpectedResponseStatus(BAD_REQUEST)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test22_fetchUserMessagingSettings_withFallbackToOrganizationLevel() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/user")
+			.withHeader(Identifier.HEADER_NAME, "fallback01user; type=adAccount")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test23_fetchUserMessagingSettings_userNotFoundInEmployeeApi() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/user")
+			.withHeader(Identifier.HEADER_NAME, "unknown99user; type=adAccount")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test24_fetchUserMessagingSettings_noSettingsAtAnyLevel() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/user")
+			.withHeader(Identifier.HEADER_NAME, "nosettings01user; type=adAccount")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test25_fetchUserMessagingSettings_withFilter() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/user?filter=values.key:'rek_enabled' and values.value:'true'")
+			.withHeader(Identifier.HEADER_NAME, "joe01doe; type=adAccount")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(OK)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test26_fetchUserMessagingSettings_emptyOrgTree() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath("/2281/user")
+			.withHeader(Identifier.HEADER_NAME, "emptyorg01user; type=adAccount")
+			.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponseStatus(NOT_FOUND)
 			.sendRequestAndVerifyResponse();
 	}
 

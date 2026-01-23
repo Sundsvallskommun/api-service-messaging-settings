@@ -1,0 +1,79 @@
+[
+	{
+		"id": "475dcfd4-21d5-4f1d-9aac-fbf247f889b2",
+		"municipalityId": "2281",
+		"created": "2025-05-01T11:00:00Z",
+		"values": [
+			{
+				"key": "callback_email",
+				"value": "no-reply.2@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email",
+				"value": "no-reply.2@localhost.local",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_email_name",
+				"value": "Dept 2 Name",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_phone_number",
+				"value": "101-22 11 22",
+				"type": "STRING"
+			},
+			{
+				"key": "contact_information_url",
+				"value": "https://domain222.tld/",
+				"type": "STRING"
+			},
+			{
+				"key": "department_id",
+				"value": "2",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "department_name",
+				"value": "dept2",
+				"type": "STRING"
+			},
+			{
+				"key": "folder_name",
+				"value": "folder2",
+				"type": "STRING"
+			},
+			{
+				"key": "organization_number",
+				"value": "160000000222",
+				"type": "NUMERIC"
+			},
+			{
+				"key": "rek_enabled",
+				"value": "true",
+				"type": "BOOLEAN"
+			},
+			{
+				"key": "sms_enabled",
+				"value": "false",
+				"type": "BOOLEAN"
+			},
+			{
+				"key": "sms_sender",
+				"value": "dept2",
+				"type": "STRING"
+			},
+			{
+				"key": "snail_mail_method",
+				"value": "SC_ADMIN",
+				"type": "STRING"
+			},
+			{
+				"key": "support_text",
+				"value": "Kontakta oss via e-post eller telefon",
+				"type": "STRING"
+			}
+		]
+	}
+]

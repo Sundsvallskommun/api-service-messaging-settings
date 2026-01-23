@@ -1,7 +1,7 @@
 package se.sundsvall.messagingsettings.integration.employee;
 
 import generated.se.sundsvall.employee.PortalPersonData;
-import java.util.Optional;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import se.sundsvall.messagingsettings.integration.employee.mapper.EmployeeMapper;
 import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
@@ -20,9 +20,10 @@ public class EmployeeIntegration {
 		this.employeeClient = employeeClient;
 	}
 
-	public Optional<DepartmentInfo> getDepartmentInfo(final String municipalityId, final String loginName) {
+	public List<DepartmentInfo> getDepartmentInfos(final String municipalityId, final String loginName) {
 		return employeeClient.getEmployeeByDomainAndLoginName(municipalityId, DOMAIN_PERSONAL, loginName)
-			.map(PortalPersonData::getOrgTree)
-			.map(EmployeeMapper::toDepartmentInfo);
+			.map(PortalPersonData::getFullOrgTree)
+			.map(EmployeeMapper::toDepartmentInfos)
+			.orElseGet(List::of);
 	}
 }
