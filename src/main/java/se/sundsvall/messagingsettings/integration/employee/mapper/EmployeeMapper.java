@@ -1,8 +1,9 @@
 package se.sundsvall.messagingsettings.integration.employee.mapper;
 
-import static java.util.Optional.ofNullable;
-import static org.apache.commons.lang3.math.NumberUtils.toInt;
-
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 
 public final class EmployeeMapper {
@@ -12,31 +13,33 @@ public final class EmployeeMapper {
 
 	private EmployeeMapper() {}
 
-	public static DepartmentInfo toDepartmentInfo(final String organizationsString) {
-		return ofNullable(organizationsString)
-			.map(EmployeeMapper::parseOrganisationString)
-			.orElse(null);
-	}
+	private static DepartmentInfo mapToDepartmentInfo(final String departmentString) {
+		final var orgInfo = departmentString.split(INFORMATION_DELIMITER);
 
-	private static DepartmentInfo parseOrganisationString(final String organizationsString) {
-		final var organizations = organizationsString.split(ORGANIZATION_DELIMITER);
-
-		for (final String organization : organizations) {
-			final var orgInfo = organization.split(INFORMATION_DELIMITER);
-
-			if (orgInfo.length != 3) {
-				continue;
-			}
-
-			final var level = orgInfo[0];
-			final var orgId = orgInfo[1];
-			final var name = orgInfo[2];
-
-			if (toInt(level) == 2) {
-				return new DepartmentInfo(level, orgId, name);
-			}
+		if (orgInfo.length != 3) {
+			return null;
 		}
 
-		return null;
+		final var level = orgInfo[0];
+		final var orgId = orgInfo[1];
+		final var name = orgInfo[2];
+
+		return new DepartmentInfo(level, orgId, name);
+	}
+
+	public static List<DepartmentInfo> toDepartmentInfos(final String organizationsString) {
+		if (organizationsString == null) {
+			return Collections.emptyList();
+		}
+		final var departmentStrings = organizationsString.split(ORGANIZATION_DELIMITER);
+
+		final int limit = Math.min(2, departmentStrings.length);
+
+		return Arrays.stream(departmentStrings)
+			.limit(limit)
+			.map(EmployeeMapper::mapToDepartmentInfo)
+			.filter(Objects::nonNull)
+			.toList()
+			.reversed(); // Reverses the list to have level 2 first and level 1 second
 	}
 }

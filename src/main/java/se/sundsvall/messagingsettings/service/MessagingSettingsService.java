@@ -18,13 +18,11 @@ import se.sundsvall.messagingsettings.integration.db.MessagingSettingRepository;
 import se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.integration.employee.EmployeeIntegration;
-import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 
 @Service
 public class MessagingSettingsService {
 
-	static final String ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND = "Could not determine organizational affiliation for user with login name '%s'.";
-	static final String ERROR_MESSAGE_MESSAGING_SETTINGS_NOT_FOUND = "Messaging settings not found for municipality with ID '%s' and department with ID '%s'.";
+	static final String ERROR_MESSAGE_MESSAGING_SETTINGS_NOT_FOUND = "Messaging settings not found for municipality with ID '%s' and user '%s'.";
 	static final String ERROR_MESSAGE_MESSAGING_SETTING_NOT_FOUND_BY_ID = "Messaging setting not found for municipality with ID '%s' and ID '%s'.";
 
 	private final MessagingSettingRepository messagingSettingRepository;
@@ -51,25 +49,35 @@ public class MessagingSettingsService {
 
 	/**
 	 * Method returns messaging settings that matches the organization affiliated to the user represented by the provided
-	 * identifier
+	 * identifier. Settings are resolved hierarchically - first checking the user's department (level 2), then falling back
+	 * to municipality
+	 * level (level 1).
 	 *
 	 * @param  municipalityId   id of municipality to match
 	 * @param  identifier       identifier representing the user that has been provided in header with name x-sent-by
-	 * @return                  a list of MessagingSettings for the organization that matches id connected to the user
-	 *                          represented by the provided identifier
-	 * @throws ThrowableProblem if no organization could be affiliated to the provider user, or if no settings were found
-	 *                          for the organization
+	 * @param  filter           additional specification to apply when searching for settings
+	 * @return                  a list of MessagingSettings for the first matching organizational level
+	 * @throws ThrowableProblem if no settings were found at any organizational level
 	 */
 	public List<MessagingSettings> fetchMessagingSettingsForUser(final String municipalityId, final Identifier identifier, final Specification<MessagingSettingEntity> filter) {
-		final var departmentId = employeeIntegration.getDepartmentInfo(municipalityId, identifier.getValue())
-			.map(DepartmentInfo::id)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_ORGANIZATIONAL_AFFILIATION_NOT_FOUND.formatted(identifier.getValue())));
 
-		if (messagingSettingRepository.count(matchesMunicipalityId(municipalityId).and(filter).and(matchesDepartmentId(departmentId))) == 0) {
-			throw Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_MESSAGING_SETTINGS_NOT_FOUND.formatted(municipalityId, departmentId));
+		final var departmentInfos = employeeIntegration.getDepartmentInfos(municipalityId, identifier.getValue());
+		for (final var department : departmentInfos) {
+			final var settings = findSettingsForDepartment(municipalityId, department.id(), filter);
+
+			if (!settings.isEmpty()) {
+				return settings;
+			}
 		}
+		throw Problem.valueOf(NOT_FOUND, ERROR_MESSAGE_MESSAGING_SETTINGS_NOT_FOUND.formatted(municipalityId, identifier.getValue()));
+	}
 
-		return messagingSettingRepository.findAll(matchesMunicipalityId(municipalityId).and(filter).and(matchesDepartmentId(departmentId))).stream()
+	private List<MessagingSettings> findSettingsForDepartment(final String municipalityId, final String departmentId, final Specification<MessagingSettingEntity> filter) {
+		return messagingSettingRepository.findAll(
+			matchesMunicipalityId(municipalityId)
+				.and(filter)
+				.and(matchesDepartmentId(departmentId)))
+			.stream()
 			.map(EntityMapper::toMessagingSettings)
 			.toList();
 	}

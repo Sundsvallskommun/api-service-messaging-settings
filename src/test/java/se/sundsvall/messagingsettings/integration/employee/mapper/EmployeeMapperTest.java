@@ -3,51 +3,60 @@ package se.sundsvall.messagingsettings.integration.employee.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 
 class EmployeeMapperTest {
 
-	private static final String ORG_TREE_SINGLE_LEVEL = "1|123|org1";
-	private static final String ORG_TREE_MULTI_LEVEL = "1|123|org1¤2|456|dept1";
-	private static final String ORG_TREE_MULTI_LEVEL_INCOMPLETE = "1¤2|456|dept1";
-
 	@Test
-	void toDepartmentInfo_withSingleLevelOrganization() {
-		final var result = EmployeeMapper.toDepartmentInfo(ORG_TREE_SINGLE_LEVEL);
+	void toDepartmentInfos_withMultiLevelOrganization() {
+		final var orgTree = "1|123|org1¤2|456|dept1";
+		final var result = EmployeeMapper.toDepartmentInfos(orgTree);
 
-		assertThat(result).isNull();
+		assertThat(result).hasSize(2);
+		// Reversed: level 2 first, level 1 second
+		assertThat(result.get(0)).isEqualTo(new DepartmentInfo("2", "456", "dept1"));
+		assertThat(result.get(1)).isEqualTo(new DepartmentInfo("1", "123", "org1"));
 	}
 
 	@Test
-	void toDepartmentInfo_withMultiLevelOrganization() {
-		final var result = EmployeeMapper.toDepartmentInfo(ORG_TREE_MULTI_LEVEL);
+	void toDepartmentInfos_withThreeLevels_limitedToTwo() {
+		final var orgTree = "1|111|org1¤2|222|dept1¤3|333|subdept1";
+		final var result = EmployeeMapper.toDepartmentInfos(orgTree);
 
-		assertThat(result).isNotNull();
-		assertThat(result.level()).isEqualTo("2");
-		assertThat(result.id()).isEqualTo("456");
-		assertThat(result.name()).isEqualTo("dept1");
+		assertThat(result).hasSize(2);
+		// Only first 2 levels, reversed
+		assertThat(result.get(0)).isEqualTo(new DepartmentInfo("2", "222", "dept1"));
+		assertThat(result.get(1)).isEqualTo(new DepartmentInfo("1", "111", "org1"));
 	}
 
 	@Test
-	void toDepartmentInfo_withMultiLevelOrganizationIncomplete() {
-		final var result = EmployeeMapper.toDepartmentInfo(ORG_TREE_MULTI_LEVEL_INCOMPLETE);
+	void toDepartmentInfos_withSingleLevelOrganization() {
+		final var orgTree = "1|123|org1";
+		final var result = EmployeeMapper.toDepartmentInfos(orgTree);
 
-		assertThat(result).isNotNull();
-		assertThat(result.level()).isEqualTo("2");
-		assertThat(result.id()).isEqualTo("456");
-		assertThat(result.name()).isEqualTo("dept1");
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst()).isEqualTo(new DepartmentInfo("1", "123", "org1"));
 	}
 
 	@Test
-	void toDepartmentInfo_withNullInput() {
-		final var result = EmployeeMapper.toDepartmentInfo(null);
+	void toDepartmentInfos_withIncompleteDepartmentData() {
+		// The first entry is incomplete (missing parts), the second is valid
+		final var orgTree = "1¤2|456|dept1";
+		final var result = EmployeeMapper.toDepartmentInfos(orgTree);
 
-		assertThat(result).isNull();
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst()).isEqualTo(new DepartmentInfo("2", "456", "dept1"));
 	}
 
 	@Test
-	void toDepartmentInfo_withEmptyInput() {
-		final var result = EmployeeMapper.toDepartmentInfo("");
+	void toDepartmentInfos_withNullInput() {
+		final var result = EmployeeMapper.toDepartmentInfos(null);
+		assertThat(result).isEmpty();
+	}
 
-		assertThat(result).isNull();
+	@Test
+	void toDepartmentInfos_withEmptyInput() {
+		final var result = EmployeeMapper.toDepartmentInfos("");
+		assertThat(result).isEmpty();
 	}
 }
