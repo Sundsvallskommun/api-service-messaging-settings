@@ -1,9 +1,5 @@
 package se.sundsvall.messagingsettings.integration.db.mapper;
 
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-
 import java.util.List;
 import java.util.Objects;
 import se.sundsvall.messagingsettings.api.model.MessagingSettings;
@@ -13,6 +9,10 @@ import se.sundsvall.messagingsettings.api.model.MessagingSettingsRequest.Messagi
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingValueEmbeddable;
 import se.sundsvall.messagingsettings.integration.db.model.enums.ValueType;
+
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 public final class EntityMapper {
 

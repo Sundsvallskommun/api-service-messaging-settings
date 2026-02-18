@@ -1,16 +1,5 @@
 package se.sundsvall.messagingsettings.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.STRING;
-import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesDepartmentId;
-import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesMunicipalityId;
-
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +24,17 @@ import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntit
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingValueEmbeddable;
 import se.sundsvall.messagingsettings.integration.employee.EmployeeIntegration;
 import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.STRING;
+import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesDepartmentId;
+import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesMunicipalityId;
 
 @ExtendWith(MockitoExtension.class)
 class MessagingSettingsServiceTest {

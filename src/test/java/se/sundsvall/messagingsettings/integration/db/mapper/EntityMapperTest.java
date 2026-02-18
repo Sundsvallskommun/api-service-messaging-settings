@@ -1,10 +1,5 @@
 package se.sundsvall.messagingsettings.integration.db.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.BOOLEAN;
-import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.NUMERIC;
-import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.STRING;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +10,11 @@ import se.sundsvall.messagingsettings.api.model.MessagingSettingsRequest;
 import se.sundsvall.messagingsettings.api.model.MessagingSettingsRequest.MessagingSettingValueRequest;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingValueEmbeddable;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.BOOLEAN;
+import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.NUMERIC;
+import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.STRING;
 
 class EntityMapperTest {
 

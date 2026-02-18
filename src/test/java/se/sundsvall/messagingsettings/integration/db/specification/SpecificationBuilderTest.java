@@ -1,9 +1,9 @@
 package se.sundsvall.messagingsettings.integration.db.specification;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SpecificationBuilderTest {
 

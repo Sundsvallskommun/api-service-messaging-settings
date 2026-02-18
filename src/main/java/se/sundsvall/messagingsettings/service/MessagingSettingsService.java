@@ -1,11 +1,5 @@
 package se.sundsvall.messagingsettings.service;
 
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toEntity;
-import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.updateEntity;
-import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesDepartmentId;
-import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesMunicipalityId;
-
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -18,6 +12,12 @@ import se.sundsvall.messagingsettings.integration.db.MessagingSettingRepository;
 import se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.integration.employee.EmployeeIntegration;
+
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toEntity;
+import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.updateEntity;
+import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesDepartmentId;
+import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesMunicipalityId;
 
 @Service
 public class MessagingSettingsService {

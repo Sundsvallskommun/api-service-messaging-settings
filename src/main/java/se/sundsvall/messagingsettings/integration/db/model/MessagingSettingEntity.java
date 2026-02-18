@@ -1,9 +1,5 @@
 package se.sundsvall.messagingsettings.integration.db.model;
 
-import static jakarta.persistence.FetchType.EAGER;
-import static jakarta.persistence.GenerationType.UUID;
-import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE_UTC;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -27,6 +23,10 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.GenerationType.UUID;
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE_UTC;
 
 @Entity
 @Table(name = "messaging_setting", indexes = {

@@ -1,12 +1,12 @@
 package se.sundsvall.messagingsettings.integration.db.specification;
 
+import org.springframework.data.jpa.domain.Specification;
+
 import static jakarta.persistence.criteria.JoinType.LEFT;
 import static java.util.Objects.nonNull;
 import static se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity_.VALUES;
 import static se.sundsvall.messagingsettings.integration.db.model.MessagingSettingValueEmbeddable_.KEY;
 import static se.sundsvall.messagingsettings.integration.db.model.MessagingSettingValueEmbeddable_.VALUE;
-
-import org.springframework.data.jpa.domain.Specification;
 
 public class SpecificationBuilder<T> {
 

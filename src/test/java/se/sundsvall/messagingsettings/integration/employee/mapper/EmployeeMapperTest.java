@@ -1,9 +1,9 @@
 package se.sundsvall.messagingsettings.integration.employee.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
 import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class EmployeeMapperTest {
 
