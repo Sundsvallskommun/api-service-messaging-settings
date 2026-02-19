@@ -1,7 +1,5 @@
 package se.sundsvall.messagingsettings.integration.db;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("junit")

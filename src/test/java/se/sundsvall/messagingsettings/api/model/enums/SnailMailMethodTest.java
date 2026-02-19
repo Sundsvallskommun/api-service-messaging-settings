@@ -1,11 +1,11 @@
 package se.sundsvall.messagingsettings.api.model.enums;
 
+import org.junit.jupiter.api.Test;
+import se.sundsvall.messagingsettings.enums.SnailMailMethod;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.messagingsettings.enums.SnailMailMethod.EMAIL;
 import static se.sundsvall.messagingsettings.enums.SnailMailMethod.SC_ADMIN;
-
-import org.junit.jupiter.api.Test;
-import se.sundsvall.messagingsettings.enums.SnailMailMethod;
 
 class SnailMailMethodTest {
 

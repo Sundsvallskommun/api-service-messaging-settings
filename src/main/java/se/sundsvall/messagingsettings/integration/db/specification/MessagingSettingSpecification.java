@@ -1,10 +1,10 @@
 package se.sundsvall.messagingsettings.integration.db.specification;
 
-import static java.util.Objects.nonNull;
-import static se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity_.MUNICIPALITY_ID;
-
 import org.springframework.data.jpa.domain.Specification;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
+
+import static java.util.Objects.nonNull;
+import static se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity_.MUNICIPALITY_ID;
 
 public final class MessagingSettingSpecification {
 
