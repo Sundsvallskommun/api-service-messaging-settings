@@ -15,11 +15,11 @@ spring:
       client:
         provider:
           employee:
-            token-uri: http://localhost:${wiremock.server.port}/token
+            token-uri: http://localhost:${wiremock.server.port:}/token
         registration:
           employee:
             client-id: client-id
             client-secret: client-secret
 integration:
   employee:
-    url: http://localhost:${wiremock.server.port}/employee
+    url: http://localhost:${wiremock.server.port:}/employee

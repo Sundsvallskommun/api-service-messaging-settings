@@ -1,10 +1,12 @@
 package se.sundsvall.messagingsettings.service;
 
+import com.turkraft.springfilter.converter.FilterSpecification;
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -12,10 +14,9 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.messagingsettings.api.model.MessagingSettingsRequest;
 import se.sundsvall.messagingsettings.api.model.MessagingSettingsRequest.MessagingSettingValueRequest;
@@ -27,11 +28,14 @@ import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.messagingsettings.integration.db.model.enums.ValueType.STRING;
 import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesDepartmentId;
 import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesMunicipalityId;
@@ -49,7 +53,7 @@ class MessagingSettingsServiceTest {
 	@Mock
 	private EmployeeIntegration mockEmployeeIntegration;
 
-	@Spy
+	@Mock
 	private FilterSpecificationConverter filterSpecificationConverterSpy;
 
 	@Captor
@@ -57,6 +61,12 @@ class MessagingSettingsServiceTest {
 
 	@InjectMocks
 	private MessagingSettingsService messagingSettingsService;
+
+	@BeforeEach
+	void setUp() {
+		lenient().when(filterSpecificationConverterSpy.convert(anyString()))
+			.thenReturn(mock(FilterSpecification.class));
+	}
 
 	@AfterEach
 	void verifyNoMoreMockInteractions() {
@@ -96,7 +106,7 @@ class MessagingSettingsServiceTest {
 		assertThat(result.getFirst()).hasAllNullFieldsOrPropertiesExcept("values");
 		assertThat(result.getFirst().getValues()).isEmpty();
 		assertThat(specificationCaptor.getAllValues()).hasSize(1);
-		assertThat(specificationCaptor.getValue()).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(filter).and(matchesDepartmentId("44")));
+		assertThat(specificationCaptor.getValue()).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(matchesDepartmentId("44")).and(filter));
 	}
 
 	@Test
@@ -132,7 +142,7 @@ class MessagingSettingsServiceTest {
 		verify(mockEmployeeIntegration).getDepartmentInfos(MUNICIPALITY_ID, LOGIN_NAME);
 		verify(mockMessagingSettingRepository).findAll(specificationCaptor.capture());
 
-		assertThat(specificationCaptor.getValue()).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(filter).and(matchesDepartmentId("44")));
+		assertThat(specificationCaptor.getValue()).usingRecursiveComparison().isEqualTo(matchesMunicipalityId(MUNICIPALITY_ID).and(matchesDepartmentId("44")).and(filter));
 	}
 
 	@Test

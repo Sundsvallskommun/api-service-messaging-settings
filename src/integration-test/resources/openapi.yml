@@ -1,37 +1,37 @@
 openapi: 3.1.0
 info:
   title: api-service-messaging-settings
-  contact: { }
+  contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "3.0"
 servers:
-  - url: http://localhost:50427
-    description: Generated server url
+- url: http://localhost:57650
+  description: Generated server url
 paths:
   /{municipalityId}:
     get:
       tags:
-        - Messaging Settings
+      - Messaging Settings
       summary: Get messaging settings
       description: Get all messaging settings or the ones that matches provided filter
       operationId: fetchMessagingSettings
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: filter
-          in: query
-          description: "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)"
-          required: false
-          schema:
-            type: string
-          example: "created > '2022-09-08T12:00:00.000+02:00' and values.key: 'namespace'\
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: filter
+        in: query
+        description: "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)"
+        required: false
+        schema:
+          type: string
+        example: "created > '2022-09-08T12:00:00.000+02:00' and values.key: 'namespace'\
           \ and values.value: 'NS1'"
       responses:
         "200":
@@ -48,8 +48,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -58,18 +58,18 @@ paths:
                 $ref: "#/components/schemas/Problem"
     post:
       tags:
-        - Messaging Settings
+      - Messaging Settings
       summary: Create messaging setting
       description: Create a new messaging setting
       operationId: createMessagingSetting
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
       requestBody:
         content:
           application/json:
@@ -90,8 +90,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -101,25 +101,25 @@ paths:
   /{municipalityId}/{id}:
     get:
       tags:
-        - Messaging Settings
+      - Messaging Settings
       summary: Get messaging setting by ID
       description: Get a specific messaging setting by ID
       operationId: getMessagingSettingById
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Messaging setting ID
-          required: true
-          schema:
-            type: string
-          example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Messaging setting ID
+        required: true
+        schema:
+          type: string
+        example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
       responses:
         "200":
           description: OK
@@ -139,8 +139,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -149,25 +149,25 @@ paths:
                 $ref: "#/components/schemas/Problem"
     delete:
       tags:
-        - Messaging Settings
+      - Messaging Settings
       summary: Delete messaging setting
       description: Delete a messaging setting by ID
       operationId: deleteMessagingSetting
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Messaging setting ID
-          required: true
-          schema:
-            type: string
-          example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Messaging setting ID
+        required: true
+        schema:
+          type: string
+        example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
       responses:
         "204":
           description: No Content
@@ -183,8 +183,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -193,25 +193,25 @@ paths:
                 $ref: "#/components/schemas/Problem"
     patch:
       tags:
-        - Messaging Settings
+      - Messaging Settings
       summary: Update messaging setting
       description: Update an existing messaging setting
       operationId: updateMessagingSetting
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Messaging setting ID
-          required: true
-          schema:
-            type: string
-          example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Messaging setting ID
+        required: true
+        schema:
+          type: string
+        example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
       requestBody:
         content:
           application/json:
@@ -237,8 +237,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -248,34 +248,34 @@ paths:
   /{municipalityId}/user:
     get:
       tags:
-        - Messaging Settings
+      - Messaging Settings
       summary: Get messaging settings for organization connected to a user
       description: Get messaging settings for the organization connected to the provided
         user.
       operationId: getMessagingSettingsForUser
       parameters:
-        - name: filter
-          in: query
-          description: "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)"
-          required: false
-          schema:
-            type: string
-          example: "created > '2022-09-08T12:00:00.000+02:00' and values.key: 'namespace'\
+      - name: filter
+        in: query
+        description: "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)"
+        required: false
+        schema:
+          type: string
+        example: "created > '2022-09-08T12:00:00.000+02:00' and values.key: 'namespace'\
           \ and values.value: 'NS1'"
-        - name: X-Sent-By
-          in: header
-          description: User identity
-          required: true
-          schema:
-            type: string
-          example: joe01doe;type=adAccount
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
+      - name: X-Sent-By
+        in: header
+        description: User identity
+        required: true
+        schema:
+          type: string
+        example: joe01doe;type=adAccount
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
       responses:
         "200":
           description: OK
@@ -297,8 +297,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -308,7 +308,7 @@ paths:
   /api-docs:
     get:
       tags:
-        - API
+      - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -324,32 +324,32 @@ paths:
   /{municipalityId}/{id}/key/{key}:
     delete:
       tags:
-        - Messaging Settings
+      - Messaging Settings
       summary: Delete messaging setting key
       description: Delete a specific key from a messaging setting
       operationId: deleteMessagingSettingKey
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Messaging setting ID
-          required: true
-          schema:
-            type: string
-          example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
-        - name: key
-          in: path
-          description: Key to delete
-          required: true
-          schema:
-            type: string
-          example: department_name
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: id
+        in: path
+        description: Messaging setting ID
+        required: true
+        schema:
+          type: string
+        example: c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
+      - name: key
+        in: path
+        description: Key to delete
+        required: true
+        schema:
+          type: string
+        example: department_name
       responses:
         "204":
           description: No Content
@@ -365,8 +365,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -378,8 +378,6 @@ components:
     Problem:
       type: object
       properties:
-        status:
-          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
@@ -390,174 +388,48 @@ components:
         type:
           type: string
           format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
-    StatusType:
-      type: object
-      properties:
-        statusCode:
+        status:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
-        cause:
-          $ref: "#/components/schemas/ThrowableProblem"
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              className:
-                type: string
-              nativeMethod:
-                type: boolean
         type:
           type: string
           format: uri
         status:
-          $ref: "#/components/schemas/StatusType"
+          type: integer
+          format: int32
         violations:
           type: array
           items:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        message:
-          type: string
         detail:
           type: string
+        causeAsProblem:
+          $ref: "#/components/schemas/ThrowableProblem"
         instance:
           type: string
           format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    className:
-                      type: string
-                    nativeMethod:
-                      type: boolean
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
     ThrowableProblem:
       type: object
       properties:
-        cause: { }
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              className:
-                type: string
-              nativeMethod:
-                type: boolean
-        message:
+        type:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
+          format: uri
         title:
           type: string
+        status:
+          type: integer
+          format: int32
         detail:
           type: string
         instance:
           type: string
           format: uri
-        type:
-          type: string
-          format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    className:
-                      type: string
-                    nativeMethod:
-                      type: boolean
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
+        causeAsProblem: {}
     Violation:
       type: object
       properties:
@@ -573,24 +445,21 @@ components:
           type: string
           description: Identifier key for the value setting
           examples:
-            - department_name
-          minLength: 1
+          - department_name
         value:
           type: string
           description: Stored value for the value setting
           examples:
-            - Department 44
-          minLength: 1
+          - Department 44
         type:
           type: string
           description: "Type of data for the stored value. Can be one of [STRING|NUMERIC|BOOLEAN]"
           examples:
-            - STRING
-          minLength: 1
+          - STRING
       required:
-        - key
-        - type
-        - value
+      - key
+      - type
+      - value
     MessagingSettingsRequest:
       type: object
       description: Messaging settings request model
@@ -602,7 +471,7 @@ components:
             $ref: "#/components/schemas/MessagingSettingValueRequest"
           minItems: 1
       required:
-        - values
+      - values
     MessagingSettingValue:
       type: object
       description: Messaging setting value model
@@ -611,19 +480,19 @@ components:
           type: string
           description: Identifier key for the value setting
           examples:
-            - department_name
+          - department_name
           readOnly: true
         value:
           type: string
           description: Stored value for the value setting
           examples:
-            - Department 44
+          - Department 44
           readOnly: true
         type:
           type: string
           description: "Type of data for the stored value. Can be one of [STRING|NUMERIC|BOOLEAN]"
           examples:
-            - STRING
+          - STRING
           readOnly: true
     MessagingSettings:
       type: object
@@ -633,21 +502,21 @@ components:
           type: string
           description: Id for the messaging setting instance
           examples:
-            - c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
+          - c9383d10-6fb5-4fc1-bd0a-50bf5a24d5b7
           readOnly: true
         municipalityId:
           type: string
           description: Municipality id for municipality that the messaging setting
             instance belongs to
           examples:
-            - "2281"
+          - "2281"
           readOnly: true
         created:
           type: string
           format: date-time
           description: Timestamp when the instance was created
           examples:
-            - 2025-10-24T15:30:00+02:00
+          - 2025-10-24T15:30:00+02:00
           readOnly: true
         updated:
           type: string
@@ -655,11 +524,12 @@ components:
           description: Timestamp when the instance was last updated. Null if instance
             has never been updated.
           examples:
-            - 2025-10-25T16:30:00+02:00
+          - 2025-10-25T16:30:00+02:00
           readOnly: true
         values:
           type: array
           description: Values connected to the messaging setting instance
           items:
             $ref: "#/components/schemas/MessagingSettingValue"
-  securitySchemes: { }
+          readOnly: true
+  securitySchemes: {}

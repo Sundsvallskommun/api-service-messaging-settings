@@ -1,10 +1,11 @@
 package se.sundsvall.messagingsettings.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.zalando.problem.Problem;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.dept44.support.Identifier;
 import se.sundsvall.messagingsettings.api.model.MessagingSettings;
 import se.sundsvall.messagingsettings.api.model.MessagingSettingsRequest;
@@ -13,7 +14,7 @@ import se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper;
 import se.sundsvall.messagingsettings.integration.db.model.MessagingSettingEntity;
 import se.sundsvall.messagingsettings.integration.employee.EmployeeIntegration;
 
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.toEntity;
 import static se.sundsvall.messagingsettings.integration.db.mapper.EntityMapper.updateEntity;
 import static se.sundsvall.messagingsettings.integration.db.specification.MessagingSettingSpecification.matchesDepartmentId;
@@ -42,7 +43,11 @@ public class MessagingSettingsService {
 	 * @return                a list of MessagingSettings that matches provided filters within the provided municipality
 	 */
 	public List<MessagingSettings> fetchMessagingSettings(final String municipalityId, final Specification<MessagingSettingEntity> filter) {
-		return messagingSettingRepository.findAll(matchesMunicipalityId(municipalityId).and(filter)).stream()
+		final var spec = Optional.ofNullable(filter)
+			.map(matchesMunicipalityId(municipalityId)::and)
+			.orElse(matchesMunicipalityId(municipalityId));
+
+		return messagingSettingRepository.findAll(spec).stream()
 			.map(EntityMapper::toMessagingSettings)
 			.toList();
 	}
@@ -73,11 +78,12 @@ public class MessagingSettingsService {
 	}
 
 	private List<MessagingSettings> findSettingsForDepartment(final String municipalityId, final String departmentId, final Specification<MessagingSettingEntity> filter) {
-		return messagingSettingRepository.findAll(
-			matchesMunicipalityId(municipalityId)
-				.and(filter)
-				.and(matchesDepartmentId(departmentId)))
-			.stream()
+		final var baseSpec = matchesMunicipalityId(municipalityId).and(matchesDepartmentId(departmentId));
+		final var spec = Optional.ofNullable(filter)
+			.map(baseSpec::and)
+			.orElse(baseSpec);
+
+		return messagingSettingRepository.findAll(spec).stream()
 			.map(EntityMapper::toMessagingSettings)
 			.toList();
 	}
