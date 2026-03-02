@@ -1,7 +1,7 @@
 {
 	"title": "Constraint Violation",
 	"status": 400,
-	"type": "about:blank",
+	"type": "https://github.com/Sundsvallskommun/dept44/problems/constraint-violation",
 	"violations": [
 		{
 			"field": "getMessagingSettingById.municipalityId",
