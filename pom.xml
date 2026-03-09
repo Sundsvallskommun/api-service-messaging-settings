@@ -46,6 +46,10 @@
 			<artifactId>dept44-starter-feign</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-processor</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.turkraft.springfilter</groupId>
 			<artifactId>jpa</artifactId>
 			<version>${spring-filter.version}</version>
