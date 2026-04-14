@@ -39,3 +39,6 @@ integration:
     url: junit-employe-url
     connect-timeout: 3
     read-timeout: 4
+    domains:
+      2281: PERSONAL
+      2260: ANGEDOMAIN

@@ -24,3 +24,6 @@ integration:
   employee:
     connect-timeout: 2
     read-timeout: 10
+    domains:
+      2281: PERSONAL
+      2260: ANGEDOMAIN
