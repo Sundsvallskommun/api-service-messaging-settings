@@ -19,5 +19,8 @@ class EmployeePropertiesTest {
 	void testProperties() {
 		assertThat(properties.connectTimeout()).isEqualTo(3);
 		assertThat(properties.readTimeout()).isEqualTo(4);
+		assertThat(properties.domains())
+			.containsEntry("2281", "PERSONAL")
+			.containsEntry("2260", "ANGEDOMAIN");
 	}
 }

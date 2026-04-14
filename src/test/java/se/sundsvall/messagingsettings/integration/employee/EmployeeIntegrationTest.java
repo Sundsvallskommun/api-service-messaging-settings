@@ -2,6 +2,7 @@ package se.sundsvall.messagingsettings.integration.employee;
 
 import generated.se.sundsvall.employee.PortalPersonData;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,15 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.sundsvall.dept44.problem.ThrowableProblem;
+import se.sundsvall.messagingsettings.integration.employee.configuration.EmployeeProperties;
 import se.sundsvall.messagingsettings.integration.employee.mapper.EmployeeMapper;
 import se.sundsvall.messagingsettings.service.model.DepartmentInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +36,9 @@ class EmployeeIntegrationTest {
 
 	@Mock
 	private EmployeeClient mockEmployeeClient;
+
+	@Mock
+	private EmployeeProperties mockEmployeeProperties;
 
 	@InjectMocks
 	private EmployeeIntegration employeeIntegration;
@@ -53,6 +61,7 @@ class EmployeeIntegrationTest {
 		final var portalPersonData = new PortalPersonData();
 		portalPersonData.setFullOrgTree(orgTree);
 
+		when(mockEmployeeProperties.domains()).thenReturn(Map.of(MUNICIPALITY_ID, DOMAIN_PERSONAL));
 		when(mockEmployeeClient.getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME))
 			.thenReturn(Optional.of(portalPersonData));
 
@@ -76,6 +85,7 @@ class EmployeeIntegrationTest {
 	void getDepartmentInfos_withEmptyOrgTree() {
 		final var portalPersonData = new PortalPersonData();
 
+		when(mockEmployeeProperties.domains()).thenReturn(Map.of(MUNICIPALITY_ID, DOMAIN_PERSONAL));
 		when(mockEmployeeClient.getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME))
 			.thenReturn(Optional.of(portalPersonData));
 
@@ -89,6 +99,7 @@ class EmployeeIntegrationTest {
 
 	@Test
 	void getDepartmentInfos_withNoEmployee() {
+		when(mockEmployeeProperties.domains()).thenReturn(Map.of(MUNICIPALITY_ID, DOMAIN_PERSONAL));
 		when(mockEmployeeClient.getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME))
 			.thenReturn(Optional.empty());
 
@@ -98,5 +109,27 @@ class EmployeeIntegrationTest {
 
 		verify(mockEmployeeClient).getEmployeeByDomainAndLoginName(MUNICIPALITY_ID, DOMAIN_PERSONAL, LOGIN_NAME);
 		verifyNoMoreInteractions(mockEmployeeClient);
+	}
+
+	@Test
+	void getDepartmentInfos_withUnconfiguredMunicipality() {
+		when(mockEmployeeProperties.domains()).thenReturn(Map.of("2281", DOMAIN_PERSONAL));
+
+		assertThatThrownBy(() -> employeeIntegration.getDepartmentInfos("9999", LOGIN_NAME))
+			.isInstanceOf(ThrowableProblem.class)
+			.hasMessageContaining("No employee domain configured for municipality '9999'.");
+
+		verifyNoInteractions(mockEmployeeClient);
+	}
+
+	@Test
+	void getDepartmentInfos_withNullDomains() {
+		when(mockEmployeeProperties.domains()).thenReturn(null);
+
+		assertThatThrownBy(() -> employeeIntegration.getDepartmentInfos(MUNICIPALITY_ID, LOGIN_NAME))
+			.isInstanceOf(ThrowableProblem.class)
+			.hasMessageContaining("No employee domain configured for municipality '2281'.");
+
+		verifyNoInteractions(mockEmployeeClient);
 	}
 }
