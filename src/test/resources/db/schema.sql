@@ -1,8 +1,8 @@
 
     create table messaging_setting (
         municipality_id varchar(5) not null,
-        created datetime(6),
-        updated datetime(6),
+        created datetime(6) not null,
+        updated datetime(6) not null,
         id varchar(36) not null,
         primary key (id)
     ) engine=InnoDB;
