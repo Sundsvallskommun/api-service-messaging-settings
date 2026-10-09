@@ -1,5 +1,13 @@
 package apptest;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import se.sundsvall.dept44.support.Identifier;
+import se.sundsvall.dept44.test.AbstractAppTest;
+import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
+import se.sundsvall.messagingsettings.Application;
+
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PATCH;
@@ -9,14 +17,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import se.sundsvall.dept44.support.Identifier;
-import se.sundsvall.dept44.test.AbstractAppTest;
-import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
-import se.sundsvall.messagingsettings.Application;
 
 @ActiveProfiles("it")
 @WireMockAppTestSuite(files = "classpath:/MessagingSettingsIT/", classes = Application.class)
@@ -51,8 +51,10 @@ class MessagingSettingsIT extends AbstractAppTest {
 
 	@Test
 	void test03_fetchMessagingSettingsFilteredByNamespaceAndDepartmentName() {
-		// The exists function in filter is needed when evaluating multiple expressions in the value-settings-list to create a sub
-		// query for each expression, otherwise the expression will always return an empty result as a key. For example, cannot both
+		// The exists function in filter is needed when evaluating multiple expressions in the value-settings-list to create a
+		// sub
+		// query for each expression, otherwise the expression will always return an empty result as a key. For example, cannot
+		// both
 		// be 'namespace' and 'department_name'
 		setupCall()
 			.withHttpMethod(GET)
